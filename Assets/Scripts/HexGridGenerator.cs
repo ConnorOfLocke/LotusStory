@@ -8,8 +8,7 @@ public class HexGridGenerator : MonoBehaviour {
 
 	public float hex_radius = 0.5f;
 
-	public GameObject[] hex_chunks; 
-
+	public GameObject[] hex_chunks;
 	private GameObject[] generated_hex_chunks;
 
 	// Use this for initialization
@@ -17,23 +16,31 @@ public class HexGridGenerator : MonoBehaviour {
 	{
 		if (hex_chunks.Length != 0)
 		{
-			generated_hex_chunks = new GameObject[grid_width * grid_height];
-
-			for (float z = 0 ; z < grid_height; z++)
+			float hex_width = hex_radius * 2.0f * 3/4;
+			float hex_height = hex_radius * Mathf.Sqrt(3) / 2.0f;
+			
+			int z_index = 0;
+			for (float z = 0; z < grid_height * hex_height; z += hex_radius * 2 * Mathf.Sqrt(3) / 2.0f, z_index++)
 			{
-				float width = hex_radius * 2 * 3/4;
-				float height = width * Mathf.Sqrt(3) / 4;
 				bool jitter = false;
-
-				for (float x = 0; x < grid_width; x++)
+				int x_index = 0;
+				for (float x = 0; x < grid_width * hex_width; x += hex_width, x_index++)
 				{
-					float better_height = (jitter) ? 0 : height;
-
-					GameObject newHex = Instantiate( hex_chunks[(int)Random.Range(0, 4)],
-					                                 new Vector3(x * width , 0, z * width + better_height),
-					                                 Quaternion.identity) as GameObject;
+					int randIndex = (int)Random.Range(0, 4);
+					if (jitter)
+					{
+						GameObject newHex = GameObject.Instantiate( hex_chunks[randIndex],
+						                                           new Vector3(x, 0, z + hex_height * 0.5f),
+																	Quaternion.identity) as GameObject;
+					}
+					else 
+					{
+						GameObject newHex = GameObject.Instantiate( hex_chunks[randIndex],
+						                                           new Vector3(x, 0, z - hex_height * 0.5f),
+						                                           Quaternion.identity) as GameObject;
+                    }
 					jitter = !jitter;
-				}
+				}						
 			}
 		}
 		else
