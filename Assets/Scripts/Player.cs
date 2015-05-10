@@ -10,7 +10,9 @@ public class Player : MonoBehaviour {
 	public float StopDistance = 1.0f;
 	public float EaseOffDistance = 5.0f;
 	
-	public float RotatationDelta = 0.1f;
+	public float RotatationDelta = 0.3f;
+	
+	public float LeanDegree = 20.0f;
 	
 	private Plane GroundPlane;
 	private Vector3 PositionToBe;
@@ -54,6 +56,9 @@ public class Player : MonoBehaviour {
 		
 		transform.rotation = Quaternion.Slerp(transform.rotation, RotationToBe, RotatationDelta);
 		
+		//leaneriser
+		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( (AttachedContoller.velocity.magnitude / Speed) * LeanDegree, 0, 0));
+		
 		float Distance = Vector3.Distance(transform.position, PositionToBe);
 		if (Distance > StopDistance)
 		{
@@ -65,8 +70,7 @@ public class Player : MonoBehaviour {
 			//slows down near destination
 			if (Distance < EaseOffDistance)
 				Movement = Movement * Distance / EaseOffDistance;
-			
-			
+						
 			AttachedContoller.Move(Movement);
 		}
 		else

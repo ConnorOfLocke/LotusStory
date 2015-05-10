@@ -6,6 +6,8 @@ public class FollowMeCam : MonoBehaviour {
 	public GameObject ObjectToFollow = null;
 
 	public float TimeToMove = 0.5f;
+	public float MouseSpring = 1.0f;
+	public float CutoffMouseMagnitude = 0.8f;
 
 	private Vector3 StartDistance;
 	private Vector3 SmoothVelocity;
@@ -24,6 +26,23 @@ public class FollowMeCam : MonoBehaviour {
 	void Update () {
 	
 		Vector3 PlaceToBe = ObjectToFollow.transform.position + StartDistance;
+		
+		
+		//Mouse Spring effect
+		Vector2 MouseInput = (  new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+														
+		Vector2 MouseInputVectorFromCenter = Vector2.zero;
+		if (MouseInput.magnitude != 0)
+			MouseInputVectorFromCenter = new Vector2( (MouseInput.x - Screen.currentResolution.width * 0.5f) / Screen.currentResolution.width,
+													  (MouseInput.y - Screen.currentResolution.height * 0.5f) / Screen.currentResolution.height) * 2.0f;
+							
+												
+		if (Mathf.Abs( MouseInputVectorFromCenter.x) > CutoffMouseMagnitude)																	
+			PlaceToBe.x += MouseInputVectorFromCenter.x * MouseSpring;
+			
+		if (Mathf.Abs(MouseInputVectorFromCenter.y) > CutoffMouseMagnitude)																	
+			PlaceToBe.z += MouseInputVectorFromCenter.y * MouseSpring;
+		
 		
 		transform.position = Vector3.SmoothDamp(transform.position, PlaceToBe, ref SmoothVelocity, TimeToMove);
 		
