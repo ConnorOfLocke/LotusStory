@@ -11,6 +11,8 @@ public class FollowMeCam : MonoBehaviour {
 
 	private Vector3 StartDistance;
 	private Vector3 SmoothVelocity;
+	
+	public PlayerContoller AttachedController = null;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +28,14 @@ public class FollowMeCam : MonoBehaviour {
 	void Update () {
 	
 		Vector3 PlaceToBe = ObjectToFollow.transform.position + StartDistance;
-		
+		if (AttachedController != null)
+		{
+			if (AttachedController.SelectedObject != null)
+			{
+				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.5f;
+				PlaceToBe = AveragePosition + StartDistance;
+			}
+		}
 		
 		//Mouse Spring effect
 		Vector2 MouseInput = (  new Vector2(Input.mousePosition.x, Input.mousePosition.y));
