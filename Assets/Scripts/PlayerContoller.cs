@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum PLAYER_SPELL
+{
+	SPELL_NONE,
+	SPELL_FIREBALL,
+	SPELL_2,
+	SPELL_3
+}
+
 public class PlayerContoller : MonoBehaviour {
 
 	public Player TargetPlayer;
@@ -9,10 +17,15 @@ public class PlayerContoller : MonoBehaviour {
 	public GameObject SelectedObject = null;
 	public float MaxDistanceToSelectObject = 20.0f;
 	
+	public GameObject FireBallAimEffect = null;
+	public GameObject FireBallProjectile = null;
+	
 	private Plane GroundPlane;
 	private Camera AttachedCamera;
 	
 	private bool RightMouseDown = false;
+	
+	private PLAYER_SPELL HeldSpell = PLAYER_SPELL.SPELL_NONE;
 	
 	// Use this for initialization
 	void Start () {
@@ -29,6 +42,19 @@ public class PlayerContoller : MonoBehaviour {
 		float RayDistance = 0.0f;
 		if (GroundPlane.Raycast(mouseRay, out RayDistance))
 		{
+			//cast any spells currently being held down
+			if (!Input.GetMouseButton(1) && HeldSpell != PLAYER_SPELL.SPELL_NONE)
+			{
+				if (HeldSpell == PLAYER_SPELL.SPELL_FIREBALL)
+				{
+					//FIRE THE FIREBALL
+				}
+				//AND TEH REST LATER
+				
+				HeldSpell = PLAYER_SPELL.SPELL_NONE;
+			}
+			////////////////////////////////////////////
+			//MOVEMENT
 			if (Input.GetMouseButton(0))
 			{
 				if (SelectedObject != null)
@@ -44,7 +70,29 @@ public class PlayerContoller : MonoBehaviour {
 					GameObject.Instantiate(MouseLeftClickEffect, PositionToBe + new Vector3(0, 1, 0), Quaternion.identity);
 			}
 			
-			if (Input.GetMouseButtonDown(1) && !RightMouseDown)
+			//////////////////////////////////////////////////////////////
+			//FIRE BALL SPELL / DRAIN
+			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			{
+				
+			
+			}
+			//FIRE BALL SPELL
+			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			{
+				
+				
+			}
+			//FIRE BALL SPELL
+			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			{
+				
+				
+			}
+			
+			//////////////////////////////////////////////////////////////
+			//Interactables
+			else if (Input.GetMouseButtonDown(1) && !RightMouseDown)
 			{
 				RaycastHit Hit;
 				Physics.Raycast(mouseRay, out Hit);

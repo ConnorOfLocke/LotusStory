@@ -4,7 +4,7 @@ using System.Collections;
 
 public class InteractableObject_UI : InteractableObject
 {
-	public SwitchMovement ManaUI = null;
+	public ManaUIMovement ManaUI = null;
 	public Image ManaBar = null;
 	
 	private Vector3 OriginalManaBarScale;
@@ -13,6 +13,7 @@ public class InteractableObject_UI : InteractableObject
 	public override void Start ()
 	{
 		OriginalManaBarScale = ManaBar.rectTransform.localScale;
+		
 	}
 
 	// Update is called once per frame

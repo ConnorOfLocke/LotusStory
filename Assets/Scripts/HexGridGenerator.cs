@@ -39,6 +39,8 @@ public class HexGridGenerator : MonoBehaviour {
 			float hex_width = hex_radius * 2.0f * 3/4;
 			float hex_height = hex_radius * Mathf.Sqrt(3) / 2.0f;
 		
+			List<GameObject> hex_chunks_with_interactables = new List<GameObject>();
+		
 			//First Pass for terrain	
 			int z_index = 0;
 			for (float z = 0; z < grid_height * hex_height; z += hex_radius * 2 * Mathf.Sqrt(3) / 2.0f, z_index++)
@@ -62,28 +64,45 @@ public class HexGridGenerator : MonoBehaviour {
 						                                           		Quaternion.identity) as GameObject;
                     }
                     
-                    newHex.GetComponent<HexChunk>().SetHexChunkType(randIndex);
+                    //sets the hex type if interactables can spawn else -1
+					if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length > 0 && InteractableObjects[randIndex].Count > 0 )
+                   		newHex.GetComponent<HexChunk>().SetHexChunkType(randIndex);
+                   	else
+                   		newHex.GetComponent<HexChunk>().SetHexChunkType(-1);
+                   		
+                    
+                    if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length != 0)
+                    {
+						hex_chunks_with_interactables.Add(newHex);
+                    }
+                    
                     generated_hex_chunks.Add(newHex);
 					jitter = !jitter;
 				}						
 			}
 	
 	
-	
 			//Second Pass for the Interactables
 			for (int i = 0; i < numInteractables; i++)
 			{
-				int hexIndex = (int)(Random.value * generated_hex_chunks.Count);
-				while (generated_hex_chunks[hexIndex].GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length != 0)
-					hexIndex = (int)(Random.value * generated_hex_chunks.Count);
+				int hexIndex = (int)(Random.value * hex_chunks_with_interactables.Count);
 	
-				int HexChunkID = generated_hex_chunks[hexIndex].GetComponent<HexChunk>().GetHexChunkType();
-				int InteractableIndex = (int)(Random.value * InteractableObjects[HexChunkID].Count);
+				int HexChunkID = hex_chunks_with_interactables[hexIndex].GetComponent<HexChunk>().GetHexChunkType();
+				if (HexChunkID != -1)
+				{
+					int InteractableIndex = (int)(Random.value * InteractableObjects[HexChunkID].Count);
+					
+					//if there are no placeholders in the hex chunk left remove it
+					if (hex_chunks_with_interactables[hexIndex].GetComponent<HexChunk>().SpawnInteractObject(InteractableObjects[HexChunkID][InteractableIndex]))
+					{
+						hex_chunks_with_interactables.RemoveAt(hexIndex);
+					}
+				}
+				else
+					i--;
 				
-				generated_hex_chunks[hexIndex].GetComponent<HexChunk>().SpawnInteractObject(InteractableObjects[HexChunkID][InteractableIndex]);
+				
 			}
-			
-			
 			
 			
 			//ThirdPass for getting rid of old placeholders

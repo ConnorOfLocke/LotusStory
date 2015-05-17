@@ -32,7 +32,7 @@ public class FollowMeCam : MonoBehaviour {
 		{
 			if (AttachedController.SelectedObject != null)
 			{
-				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.5f;
+				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.75f;
 				PlaceToBe = AveragePosition + StartDistance;
 			}
 		}
