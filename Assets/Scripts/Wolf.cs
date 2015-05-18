@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Wolf : MonoBehaviour
+{
+	public float DistanceToStartFollowing = 10.0f;
+	public GameObject PlayerInScene = null;
+	public float PathfindCheckTime = 2.0f;
+	private float CurrentPathfindCheck = 0.0f;
+
 
 	public float Speed = 5.0f;
 	public float StopDistance = 1.0f;
@@ -14,39 +20,47 @@ public class Player : MonoBehaviour {
 	private Vector3 PositionToBe;
 	private Quaternion RotationToBe;
 	private Vector3 Velocity;
-
+	
 	private CharacterController AttachedContoller;
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
 		AttachedContoller = GetComponent<CharacterController>();
 		RotationToBe = transform.rotation;
 		PositionToBe = transform.position;
+		CurrentPathfindCheck = PathfindCheckTime;
 	}
-	
+
 	public void SetTargetPosition(Vector3 Position)
 	{
-		PositionToBe = new Vector3(Position.x, PositionToBe.y, Position.z);
 		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
+		PositionToBe = new Vector3(Position.x, PositionToBe.y, Position.z);
+		
 	}
-	
-	public void SetTargetRotation(Quaternion newRotation)
-	{
-		RotationToBe = newRotation;
-	}
+
 	// Update is called once per frame
 	void Update ()
 	{
+		//goes towards player if close enough
 		float Distance = Vector3.Distance(transform.position, PositionToBe);
-		
-		//rotate towards wanted direction
+	
+		if (CurrentPathfindCheck >= PathfindCheckTime )
+		{		
+			SetTargetPosition(PlayerInScene.transform.position);
+			CurrentPathfindCheck = 0;
+		}
+		else if (CurrentPathfindCheck < PathfindCheckTime)
+			CurrentPathfindCheck += Time.deltaTime;
+			
+		//Rotate the things
 		transform.rotation = Quaternion.Slerp(transform.rotation, RotationToBe, RotatationDelta);
 		if ( Vector3.Distance(RotationToBe.eulerAngles, transform.rotation.eulerAngles) < 5)
 			transform.rotation = RotationToBe;
 
-		//leaneriser
-		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( (AttachedContoller.velocity.magnitude / Speed) * LeanDegree, 0, 0));
+		//lean the thing
+		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( AttachedContoller.velocity.magnitude / Speed * LeanDegree, 0, 0));
+		
 		
 		if (Distance > StopDistance)
 		{
@@ -60,7 +74,7 @@ public class Player : MonoBehaviour {
 			{
 				Movement = Movement * Distance / EaseOffDistance;
 			}
-						
+			
 			AttachedContoller.Move(Movement);
 		}
 		else
@@ -68,9 +82,8 @@ public class Player : MonoBehaviour {
 			AttachedContoller.Move( Vector3.zero);
 		}
 		
-		
-		
-		
-		
+
+
 	}
 }
+

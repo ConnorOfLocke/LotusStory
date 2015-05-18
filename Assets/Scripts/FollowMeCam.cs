@@ -32,7 +32,7 @@ public class FollowMeCam : MonoBehaviour {
 		{
 			if (AttachedController.SelectedObject != null)
 			{
-				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.75f;
+				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.5f;
 				PlaceToBe = AveragePosition + StartDistance;
 			}
 		}
@@ -51,7 +51,6 @@ public class FollowMeCam : MonoBehaviour {
 			
 		if (Mathf.Abs(MouseInputVectorFromCenter.y) > CutoffMouseMagnitude)																	
 			PlaceToBe.z += MouseInputVectorFromCenter.y * MouseSpring;
-		
 		
 		transform.position = Vector3.SmoothDamp(transform.position, PlaceToBe, ref SmoothVelocity, TimeToMove);
 		

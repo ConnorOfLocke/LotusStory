@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ManaUIMovement : MonoBehaviour {
@@ -30,12 +31,19 @@ public class ManaUIMovement : MonoBehaviour {
 		if (DirectionToCamera != Vector3.zero)
 		{
 			AttachedTransform.position = AttachedTransform.parent.transform.position + DirectionToCamera.normalized * DistanceFromParent;
-			AttachedTransform.rotation.SetLookRotation(DirectionToCamera);
+			
+			Quaternion newRotation = Quaternion.identity;
+			newRotation.SetLookRotation(-DirectionToCamera);
+			
+			AttachedTransform.rotation = newRotation;
+			//AttachedTransform.rotation.SetLookRotation(DirectionToCamera);
+			
 		}
 		
 		Vector3 ActivePos = new Vector3(AttachedTransform.position.x, ActiveYPosition, AttachedTransform.position.z);
 		Vector3 InactivePos = new Vector3(AttachedTransform.position.x, InactiveYPosition, AttachedTransform.position.z);
-		//Smoothdamps towards the wantedposition
+
+		
 		if (Active)
 			AttachedTransform.position = Vector3.SmoothDamp(InactivePos, ActivePos, ref SmoothVelocity, TimeToSwitch);
 		else

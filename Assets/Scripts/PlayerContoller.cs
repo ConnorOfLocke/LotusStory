@@ -17,6 +17,7 @@ public class PlayerContoller : MonoBehaviour {
 	public GameObject SelectedObject = null;
 	public float MaxDistanceToSelectObject = 20.0f;
 	
+	public float SpellProjectorHeight = 20.0f;
 	public GameObject FireBallAimEffect = null;
 	public GameObject FireBallProjectile = null;
 	
@@ -26,6 +27,7 @@ public class PlayerContoller : MonoBehaviour {
 	private bool RightMouseDown = false;
 	
 	private PLAYER_SPELL HeldSpell = PLAYER_SPELL.SPELL_NONE;
+	private ProjectorLightFadeInAndExpand HeldSpellEffect;
 	
 	// Use this for initialization
 	void Start () {
@@ -47,10 +49,12 @@ public class PlayerContoller : MonoBehaviour {
 			{
 				if (HeldSpell == PLAYER_SPELL.SPELL_FIREBALL)
 				{
-					//FIRE THE FIREBALL
+					GameObject pewpew = GameObject.Instantiate(FireBallProjectile, TargetPlayer.transform.position, Quaternion.identity) as GameObject;
+					pewpew.GetComponent<Projectile>().Destination = mouseRay.GetPoint(RayDistance);
+					pewpew.GetComponent<Projectile>().Source = TargetPlayer.transform.position;
 				}
-				//AND TEH REST LATER
-				
+				Destroy(HeldSpellEffect.gameObject);
+				HeldSpellEffect = null;
 				HeldSpell = PLAYER_SPELL.SPELL_NONE;
 			}
 			////////////////////////////////////////////
@@ -72,19 +76,29 @@ public class PlayerContoller : MonoBehaviour {
 			
 			//////////////////////////////////////////////////////////////
 			//FIRE BALL SPELL / DRAIN
-			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.Q))
 			{
-				
+				Vector3 HitPos = mouseRay.GetPoint(RayDistance);
+				Vector3 Direction = (HitPos - TargetPlayer.transform.position);
 			
+				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
+				if (HeldSpellEffect == null)
+					HeldSpellEffect = (GameObject.Instantiate(FireBallAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
+					
+				HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
+				
+				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
+				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
+				
 			}
-			//FIRE BALL SPELL
-			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			//Spell 2
+			else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.W))
 			{
 				
 				
 			}
-			//FIRE BALL SPELL
-			else if (Input.GetMouseButtonDown(1) && Input.GetKeyDown(KeyCode.Q))
+			//spell 3
+			else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.E))
 			{
 				
 				

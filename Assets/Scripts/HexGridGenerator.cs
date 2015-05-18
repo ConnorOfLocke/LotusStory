@@ -14,6 +14,8 @@ public class HexGridGenerator : MonoBehaviour {
 	public int numInteractables; 
 	
 	private List<GameObject> generated_hex_chunks;
+	
+	public GameObject HexWall = null;
 
 	// Use this for initialization
 	void Start () 
@@ -42,42 +44,63 @@ public class HexGridGenerator : MonoBehaviour {
 			List<GameObject> hex_chunks_with_interactables = new List<GameObject>();
 		
 			//First Pass for terrain	
-			int z_index = 0;
-			for (float z = 0; z < grid_height * hex_height; z += hex_radius * 2 * Mathf.Sqrt(3) / 2.0f, z_index++)
+			int z_index = -1;
+			for (float z = -(hex_radius * 2 * Mathf.Sqrt(3) / 2.0f); z <= (grid_height + 1) * hex_height; z += hex_radius * 2 * Mathf.Sqrt(3) / 2.0f, z_index++)
 			{
 				bool jitter = false;
-				int x_index = 0;
-				for (float x = 0; x < grid_width * hex_width; x += hex_width, x_index++)
+				int x_index = -1;
+				for (float x = -hex_width; x <= (grid_width + 1) * hex_width; x += hex_width, x_index++)
 				{
-					GameObject newHex;
-					int randIndex = (int)Random.Range(0, BaseTerrainHexs.Count);
-					if (jitter)
+					if (!(x_index == -1 ||
+						z_index == -1 ||
+						x >= (grid_width * hex_width) ||
+						z >= (grid_height * hex_height)))
 					{
-						newHex = GameObject.Instantiate( BaseTerrainHexs[randIndex].gameObject,
-						                                           new Vector3(x, 0, z + hex_height * 0.5f),
-																	Quaternion.identity) as GameObject;	
+						GameObject newHex;
+						int randIndex = (int)Random.Range(0, BaseTerrainHexs.Count);
+						if (jitter)
+						{
+							newHex = GameObject.Instantiate( BaseTerrainHexs[randIndex].gameObject,
+							                                           new Vector3(x, 0, z + hex_height * 0.5f),
+																		Quaternion.identity) as GameObject;	
+						}
+						else 
+						{
+							newHex = GameObject.Instantiate( BaseTerrainHexs[randIndex].gameObject,
+							                                           		new Vector3(x, 0, z - hex_height * 0.5f),
+							                                           		Quaternion.identity) as GameObject;
+	                    }
+	                    
+	                    //sets the hex type if interactables can spawn else -1
+						if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length > 0 && InteractableObjects[randIndex].Count > 0 )
+	                   		newHex.GetComponent<HexChunk>().SetHexChunkType(randIndex);
+	                   	else
+	                   		newHex.GetComponent<HexChunk>().SetHexChunkType(-1);
+	                   		
+	                    
+	                    if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length != 0)
+	                    {
+							hex_chunks_with_interactables.Add(newHex);
+	                    }
+	                    
+	                    generated_hex_chunks.Add(newHex);
+						jitter = !jitter;
 					}
-					else 
+					else
 					{
-						newHex = GameObject.Instantiate( BaseTerrainHexs[randIndex].gameObject,
-						                                           		new Vector3(x, 0, z - hex_height * 0.5f),
-						                                           		Quaternion.identity) as GameObject;
-                    }
-                    
-                    //sets the hex type if interactables can spawn else -1
-					if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length > 0 && InteractableObjects[randIndex].Count > 0 )
-                   		newHex.GetComponent<HexChunk>().SetHexChunkType(randIndex);
-                   	else
-                   		newHex.GetComponent<HexChunk>().SetHexChunkType(-1);
-                   		
-                    
-                    if (newHex.GetComponent<HexChunk>().PlaceHolderInteractableObjects.Length != 0)
-                    {
-						hex_chunks_with_interactables.Add(newHex);
-                    }
-                    
-                    generated_hex_chunks.Add(newHex);
-					jitter = !jitter;
+						//Spawns a Wall
+						if (jitter)
+							GameObject.Instantiate( HexWall,
+							                       new Vector3(x, 0, z + hex_height * 0.5f),
+							                       Quaternion.identity);	
+						else
+							GameObject.Instantiate( HexWall,
+							                       new Vector3(x, 0, z - hex_height * 0.5f),
+							                       Quaternion.identity);
+						
+						jitter = !jitter;
+						                       
+					}
 				}						
 			}
 	
