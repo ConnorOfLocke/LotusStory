@@ -6,14 +6,14 @@ public class HexChunk : MonoBehaviour {
 	public float FlavorPlacementJitter = 0.1f;
 	public float FlavorRotationDegreeJitter = 5f;
 	
-	public float InteractablePlacementJitter = 0.1f;
-	public float InteractableRotationDegreeJitter = 5f;
+	public float SpecialPlacementJitter = 0.1f;
+	public float SpecialRotationDegreeJitter = 5f;
 	
 	public GameObject[] PlaceHolderFlavorObjects;
 	public GameObject[] FlavorObjects;
 
 	private int PlaceHolderObjectArraySize;
-	public GameObject[] PlaceHolderInteractableObjects;
+	public GameObject[] PlaceHolderSpecialObjects;
 
 	private int HexChunkTypeID;
 	
@@ -27,10 +27,10 @@ public class HexChunk : MonoBehaviour {
 			SpawnFlavorObjects();
 			
 			
-		PlaceHolderObjectArraySize = PlaceHolderInteractableObjects.Length;
+		PlaceHolderObjectArraySize = PlaceHolderSpecialObjects.Length;
 			
-		//if (PlaceHolderInteractableObjects.Length == 0 ||
-		//    InteractableObjects.Length == 0 )
+		//if (PlaceHolderSpecialObjects.Length == 0 ||
+		//    SpecialObjects.Length == 0 )
 		//	Debug.Log("HexChunk: No PlaceHolderObjects or FlavorObjects Given");
 		//else
 		//	SpawnInteractObjects();
@@ -66,31 +66,31 @@ public class HexChunk : MonoBehaviour {
 		return HexChunkTypeID;
 	}
 	
-	public bool SpawnInteractObject(GameObject Interactable)
+	public bool SpawnSpecialObject(GameObject Special)
 	{
-		int InteractableIndex = (int)(Random.value * PlaceHolderObjectArraySize);
+		int SpecialIndex = (int)(Random.value * PlaceHolderObjectArraySize);
 		
-		if (PlaceHolderInteractableObjects[InteractableIndex] != null)
+		if (PlaceHolderSpecialObjects[SpecialIndex] != null)
 		{
 			//gets position then destroys it
-			Vector3 ObjectPosition = PlaceHolderInteractableObjects[InteractableIndex].transform.position;
-			Vector3 ObjectRotation = PlaceHolderInteractableObjects[InteractableIndex].transform.rotation.eulerAngles;
-			Destroy(PlaceHolderInteractableObjects[InteractableIndex].gameObject);
-			PlaceHolderInteractableObjects[InteractableIndex] = null;
+			Vector3 ObjectPosition = PlaceHolderSpecialObjects[SpecialIndex].transform.position;
+			Vector3 ObjectRotation = PlaceHolderSpecialObjects[SpecialIndex].transform.rotation.eulerAngles;
+			Destroy(PlaceHolderSpecialObjects[SpecialIndex].gameObject);
+			PlaceHolderSpecialObjects[SpecialIndex] = null;
 		
 			//moves it to the back of the array
-			for (int i = InteractableIndex + 1; i < PlaceHolderInteractableObjects.Length; i++)
+			for (int i = SpecialIndex + 1; i < PlaceHolderSpecialObjects.Length; i++)
 			{
-				PlaceHolderInteractableObjects[i - 1] = PlaceHolderInteractableObjects[i];
+				PlaceHolderSpecialObjects[i - 1] = PlaceHolderSpecialObjects[i];
 			}
 			PlaceHolderObjectArraySize -= 1;
 			
-			Vector3 randomJitter = Random.insideUnitSphere * InteractablePlacementJitter;
+			Vector3 randomJitter = Random.insideUnitSphere * SpecialPlacementJitter;
 			randomJitter.y = 0;
 			
-			Quaternion newRotation = Quaternion.Euler( ObjectRotation + new Vector3(0 ,Random.Range(0, InteractableRotationDegreeJitter * 2) - InteractableRotationDegreeJitter , 0));
+			Quaternion newRotation = Quaternion.Euler( ObjectRotation + new Vector3(0 ,Random.Range(0, SpecialRotationDegreeJitter * 2) - SpecialRotationDegreeJitter , 0));
 			
-			GameObject.Instantiate( Interactable, ObjectPosition + randomJitter, newRotation);
+			GameObject.Instantiate( Special, ObjectPosition + randomJitter, newRotation);
 		}
 		
 		return (PlaceHolderObjectArraySize <= 0);
@@ -98,11 +98,11 @@ public class HexChunk : MonoBehaviour {
 	
 	public void ClearUnspawned()
 	{
-		for (int i = 0; i < PlaceHolderInteractableObjects.Length; i++)
+		for (int i = 0; i < PlaceHolderSpecialObjects.Length; i++)
 		{
-			if (PlaceHolderInteractableObjects[i] != null)
+			if (PlaceHolderSpecialObjects[i] != null)
 			{
-				Destroy(PlaceHolderInteractableObjects[i]);
+				Destroy(PlaceHolderSpecialObjects[i]);
 			}
 		}
 	}

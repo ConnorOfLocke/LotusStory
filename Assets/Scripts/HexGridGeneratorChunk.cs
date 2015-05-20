@@ -4,5 +4,5 @@ using System.Collections;
 public class HexGridGeneratorChunk : MonoBehaviour {
 
 	public HexChunk BaseTerrain;
-	public GameObject[] SpawnedInteractables;
+	public GameObject[] SpawnedSpecials;
 }
