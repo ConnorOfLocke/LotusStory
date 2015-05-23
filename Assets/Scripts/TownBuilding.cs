@@ -5,16 +5,21 @@ public class TownBuilding : MonoBehaviour
 {
 	private MeshRenderer AttachedMeshRenderer;
 	private Collider[] AttachedColliders;
-	private Vector3 StartPosition;
+	private Vector3 ActivePosition;
+	private Vector3 InactivePosition;
 
 	public bool BuildingActive;
+	public GameObject RootHub = null;
 
 	// Use this for initialization
 	void Start ()
 	{
 		AttachedMeshRenderer = GetComponent<MeshRenderer>();
 		AttachedColliders = GetComponents<Collider>();
-		StartPosition = transform.position;
+		
+		ActivePosition = transform.position;
+		transform.position += new Vector3(0,-100, 0);
+		InactivePosition = transform.position;
 
 	}
 
@@ -28,14 +33,18 @@ public class TownBuilding : MonoBehaviour
 		AttachedMeshRenderer.enabled = true;
 		foreach (Collider c in AttachedColliders)
 			c.enabled = true;
+			
+		BuildingActive = true;
 
-		transform.position = StartPosition;
+		//transform.position = ActivePosition;
 	}
 
 	public void Deactiavte()
 	{
 		//AttachedMeshRenderer = GetComponent<MeshRenderer>();
 		//AttachedColliders = GetComponents<Collider>();
+
+		BuildingActive = false;
 
 		//AttachedMeshRenderer.enabled = false;
 		//foreach (Collider c in AttachedColliders)
@@ -45,7 +54,11 @@ public class TownBuilding : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (BuildingActive)
+			transform.position = Vector3.Lerp(transform.position, ActivePosition, 0.1f);
+		else
+			transform.position = Vector3.Lerp(transform.position, InactivePosition, 0.1f);
+			
 	}
 
 

@@ -34,9 +34,8 @@ public class Wolf : MonoBehaviour
 
 	public void SetTargetPosition(Vector3 Position)
 	{
-		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
 		PositionToBe = new Vector3(Position.x, PositionToBe.y, Position.z);
-		
+		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
 	}
 
 	// Update is called once per frame

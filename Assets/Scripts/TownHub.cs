@@ -20,7 +20,7 @@ public class TownHub : MonoBehaviour
 	
 	void Update ()
 	{
-		if (CurrentTimeToSpawn > TimeToSpawn && LastSpawnedSet < BuildingSets.Length - 1)
+		if (CurrentTimeToSpawn > TimeToSpawn)
 		{
 			SpawnTier();
 			CurrentTimeToSpawn = Random.Range(0, 2 * TimeToSpawnJitter) - TimeToSpawnJitter;
@@ -50,12 +50,23 @@ public class TownHub : MonoBehaviour
 			}
 		}
 
-		if (!FoundDamagedBuilding)
+		if (!FoundDamagedBuilding && (LastSpawnedSet < BuildingSets.Length - 1))
 		{
 			LastSpawnedSet++;
-			CurrentBuildingSets.Add(GameObject.Instantiate(BuildingSets[LastSpawnedSet],
-			                                               	this.transform.position,
-			                                               BuildingSets[LastSpawnedSet].transform.rotation) as GameObject);
+			GameObject BuildingSet = GameObject.Instantiate(BuildingSets[LastSpawnedSet],
+			                                             this.transform.position,
+			                                             BuildingSets[LastSpawnedSet].transform.rotation) as GameObject;
+			for (int i = 0; i < BuildingSet.transform.childCount; i++)
+			{
+				GameObject Building = BuildingSet.transform.GetChild(i).gameObject;
+				if (Building.GetComponent<TownBuilding>() != null)
+				{
+					Building.GetComponent<TownBuilding>().RootHub = this.gameObject;
+					Building.GetComponent<TownBuilding>().Activate();
+				}
+			}
+			
+			CurrentBuildingSets.Add(BuildingSet);
 		}
 
 	}

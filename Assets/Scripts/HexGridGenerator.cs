@@ -18,7 +18,7 @@ public class HexGridGenerator : MonoBehaviour {
 	public GameObject HexWall = null;
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
 		//Gets all the attached HexChunk Components
 		generated_hex_chunks = new List<GameObject>();	
@@ -123,9 +123,7 @@ public class HexGridGenerator : MonoBehaviour {
 				}
 				else
 					i--;
-
 			}
-			
 			
 			//ThirdPass for getting rid of old placeholders
 			for (int i = 0; i < generated_hex_chunks.Count; i++)
@@ -140,7 +138,7 @@ public class HexGridGenerator : MonoBehaviour {
 		}
 	}
 
-	List<GameObject> GetGeneratedChunks()
+	public List<GameObject> GetGeneratedChunks()
 	{
 		return generated_hex_chunks;
 	}

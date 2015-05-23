@@ -26,15 +26,7 @@ public class HexChunk : MonoBehaviour {
 		else
 			SpawnFlavorObjects();
 			
-			
 		PlaceHolderObjectArraySize = PlaceHolderSpecialObjects.Length;
-			
-		//if (PlaceHolderSpecialObjects.Length == 0 ||
-		//    SpecialObjects.Length == 0 )
-		//	Debug.Log("HexChunk: No PlaceHolderObjects or FlavorObjects Given");
-		//else
-		//	SpawnInteractObjects();
-		
 	}
 	
 	private void SpawnFlavorObjects()
@@ -75,7 +67,7 @@ public class HexChunk : MonoBehaviour {
 			//gets position then destroys it
 			Vector3 ObjectPosition = PlaceHolderSpecialObjects[SpecialIndex].transform.position;
 			Vector3 ObjectRotation = PlaceHolderSpecialObjects[SpecialIndex].transform.rotation.eulerAngles;
-			Destroy(PlaceHolderSpecialObjects[SpecialIndex].gameObject);
+			DestroyImmediate(PlaceHolderSpecialObjects[SpecialIndex].gameObject ,true);
 			PlaceHolderSpecialObjects[SpecialIndex] = null;
 		
 			//moves it to the back of the array
@@ -102,7 +94,7 @@ public class HexChunk : MonoBehaviour {
 		{
 			if (PlaceHolderSpecialObjects[i] != null)
 			{
-				Destroy(PlaceHolderSpecialObjects[i]);
+				DestroyImmediate(PlaceHolderSpecialObjects[i], true);
 			}
 		}
 	}
