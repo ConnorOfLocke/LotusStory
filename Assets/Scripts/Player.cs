@@ -17,17 +17,20 @@ public class Player : MonoBehaviour {
 
 	private CharacterController AttachedContoller;
 
+	private float y_pos;
+
 	// Use this for initialization
 	void Start () {
 		
 		AttachedContoller = GetComponent<CharacterController>();
 		RotationToBe = transform.rotation;
 		PositionToBe = transform.position;
+		y_pos = transform.position.y;
 	}
 	
 	public void SetTargetPosition(Vector3 Position)
 	{
-		PositionToBe = new Vector3(Position.x, PositionToBe.y, Position.z);
+		PositionToBe = new Vector3(Position.x, y_pos, Position.z);
 		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
 	}
 	
@@ -68,9 +71,6 @@ public class Player : MonoBehaviour {
 			AttachedContoller.Move( Vector3.zero);
 		}
 		
-		
-		
-		
-		
+		transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
 	}
 }

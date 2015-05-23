@@ -21,6 +21,8 @@ public class PlayerContoller : MonoBehaviour {
 	public GameObject FireBallAimEffect = null;
 	public GameObject FireBallProjectile = null;
 	
+	private float SpellHoldTime = 0.0f;
+	
 	private Plane GroundPlane;
 	private Camera AttachedCamera;
 	
@@ -52,10 +54,12 @@ public class PlayerContoller : MonoBehaviour {
 					GameObject pewpew = GameObject.Instantiate(FireBallProjectile, TargetPlayer.transform.position, Quaternion.identity) as GameObject;
 					pewpew.GetComponent<Projectile>().Destination = mouseRay.GetPoint(RayDistance);
 					pewpew.GetComponent<Projectile>().Source = TargetPlayer.transform.position;
+					pewpew.GetComponent<Projectile>().GivenPower = SpellHoldTime;
 				}
 				Destroy(HeldSpellEffect.gameObject);
 				HeldSpellEffect = null;
 				HeldSpell = PLAYER_SPELL.SPELL_NONE;
+				SpellHoldTime = 0;
 			}
 			////////////////////////////////////////////
 			//MOVEMENT
@@ -89,7 +93,7 @@ public class PlayerContoller : MonoBehaviour {
 				
 				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
 				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
-				
+				SpellHoldTime += Time.deltaTime;
 			}
 			//Spell 2
 			else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.W))

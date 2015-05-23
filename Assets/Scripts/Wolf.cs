@@ -8,7 +8,6 @@ public class Wolf : MonoBehaviour
 	public float PathfindCheckTime = 2.0f;
 	private float CurrentPathfindCheck = 0.0f;
 
-
 	public float Speed = 5.0f;
 	public float StopDistance = 1.0f;
 	public float EaseOffDistance = 5.0f;
@@ -23,6 +22,8 @@ public class Wolf : MonoBehaviour
 	
 	private CharacterController AttachedContoller;
 
+	private float y_pos;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -30,6 +31,7 @@ public class Wolf : MonoBehaviour
 		RotationToBe = transform.rotation;
 		PositionToBe = transform.position;
 		CurrentPathfindCheck = PathfindCheckTime;
+		y_pos = transform.position.y;
 	}
 
 	public void SetTargetPosition(Vector3 Position)
@@ -80,9 +82,6 @@ public class Wolf : MonoBehaviour
 		{
 			AttachedContoller.Move( Vector3.zero);
 		}
-		
-
-
 	}
 }
 

@@ -10,6 +10,8 @@ public class HexGridGenerator : MonoBehaviour {
 	public float hex_radius = 0.5f;
 
 	private List<HexChunk> BaseTerrainHexs;
+	private List<float> BaseTerrainChances;
+	private float OverallChance;
 	private List<List<GameObject>> SpecialObjects;
 	public int numSpecials; 
 	
@@ -22,9 +24,11 @@ public class HexGridGenerator : MonoBehaviour {
 	{
 		//Gets all the attached HexChunk Components
 		generated_hex_chunks = new List<GameObject>();	
-		
 		BaseTerrainHexs = new List<HexChunk>();
+		BaseTerrainChances = new List<float>();
 		SpecialObjects = new List<List<GameObject>>();
+		OverallChance = 0;
+		
 		HexGridGeneratorChunk[] attachedChunks = GetComponents<HexGridGeneratorChunk>();
 		foreach(HexGridGeneratorChunk chunk in attachedChunks)
 		{
@@ -34,6 +38,10 @@ public class HexGridGenerator : MonoBehaviour {
 			{
 				SpecialObjects[SpecialObjects.Count - 1].Add(thing);
 			}
+			
+			//Input chances
+			BaseTerrainChances.Add( OverallChance );
+			OverallChance += chunk.SpawnChance;
 		}
 		
 		if (BaseTerrainHexs.Count != 0)
@@ -57,7 +65,18 @@ public class HexGridGenerator : MonoBehaviour {
 						z >= (grid_height * hex_height * 2)))
 					{
 						GameObject newHex;
-						int randIndex = (int)Random.Range(0, BaseTerrainHexs.Count);
+						int randIndex = 0;
+						
+						float HexChance = Random.Range(0, OverallChance);
+						for (int i = 0; i < BaseTerrainChances.Count; i++)
+						{
+							if (HexChance < BaseTerrainChances[i])
+							{
+								randIndex = i;
+								break;
+							}
+						}
+						
 						if (jitter)
 						{
 							newHex = GameObject.Instantiate( BaseTerrainHexs[randIndex].gameObject,

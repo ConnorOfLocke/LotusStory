@@ -20,6 +20,8 @@ public class Collusus : MonoBehaviour {
 	private Vector3 EndPos;
 	private CharacterController AttachedController;
 	
+	private float y_pos;
+	
 	// Use this for initialization
 	void Start () {
 	
@@ -36,7 +38,7 @@ public class Collusus : MonoBehaviour {
 		GameObject EndHexChunk = hex_chunks[hex_chunk_end_index * grid_width + (grid_width - 1) ];
 		
 		//start at the StartHexChunk
-		float y_pos = transform.position.y;
+		y_pos = transform.position.y;
 		transform.position = StartHexChunk.transform.position;
 		transform.position = new Vector3( transform.position.x, y_pos, transform.position.z);
 		
@@ -87,6 +89,10 @@ public class Collusus : MonoBehaviour {
 		{
 			AttachedController.Move( Vector3.zero);
 		}
+		
+		//for not breaking purposes
+		transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
+		
 	}
-
+	
 }
