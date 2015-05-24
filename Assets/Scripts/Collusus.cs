@@ -22,10 +22,13 @@ public class Collusus : MonoBehaviour {
 	
 	private float y_pos;
 	
+	private List<Vector3> DetourPositions;
+	
 	// Use this for initialization
 	void Start () {
 	
 		AttachedController = GetComponent<CharacterController>();
+		DetourPositions = new List<Vector3>();
 	
 		List<GameObject> hex_chunks = HexGenerator.GetGeneratedChunks();
 		int grid_width = HexGenerator.grid_width;
@@ -56,6 +59,12 @@ public class Collusus : MonoBehaviour {
 		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
 	}
 	
+	public void SetDetour(Vector3 Position)
+	{
+		DetourPositions.Add( new Vector3(Position.x, transform.position.y, Position.z) );
+		SetTargetPosition(new Vector3(Position.x, transform.position.y, Position.z) );
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
@@ -76,22 +85,22 @@ public class Collusus : MonoBehaviour {
 			Vector3 Direction = (transform.rotation * new Vector3(0, 0, 1));
 			Vector3 Movement = Direction.normalized * Speed * Time.deltaTime;
 			Movement.y = 0;
-			
-			//slows down near destination
-			if (Distance < EaseOffDistance)
-			{
-				Movement = Movement * Distance / EaseOffDistance;
-			}
-			
+
 			AttachedController.Move(Movement);
 		}
 		else
 		{
-			AttachedController.Move( Vector3.zero);
+			if (DetourPositions.Count > 0)
+			{
+				SetTargetPosition(DetourPositions[DetourPositions.Count - 1]);
+				DetourPositions.RemoveAt(DetourPositions.Count - 1);
+			}
+			else
+				SetTargetPosition(EndPos);
 		}
 		
 		//for not breaking purposes
-		transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
+		//transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
 		
 	}
 	

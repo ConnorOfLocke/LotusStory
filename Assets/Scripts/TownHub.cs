@@ -34,9 +34,9 @@ public class TownHub : MonoBehaviour
 		int DamagedTier = -1;
 		bool FoundDamagedBuilding = false;
 
-		for (int i = 0; i < CurrentBuildingSets.Count && !FoundDamagedBuilding == false ; i++, DamagedTier++)
+		for (int i = 0; i < CurrentBuildingSets.Count && FoundDamagedBuilding == false ; i++, DamagedTier++)
 		{
-			for (int j = 0; j < CurrentBuildingSets[i].transform.childCount; i++)
+			for (int j = 0; j < CurrentBuildingSets[i].transform.childCount; j++)
 			{
 				GameObject building = CurrentBuildingSets[i].transform.GetChild(j).gameObject;
 				if (building.GetComponent<TownBuilding>() != null)
@@ -50,6 +50,7 @@ public class TownHub : MonoBehaviour
 			}
 		}
 
+		//Sapwn next tier if nothing is broken
 		if (!FoundDamagedBuilding && (LastSpawnedSet < BuildingSets.Length - 1))
 		{
 			LastSpawnedSet++;
@@ -65,7 +66,6 @@ public class TownHub : MonoBehaviour
 					Building.GetComponent<TownBuilding>().Activate();
 				}
 			}
-			
 			CurrentBuildingSets.Add(BuildingSet);
 		}
 

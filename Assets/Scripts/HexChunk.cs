@@ -58,7 +58,7 @@ public class HexChunk : MonoBehaviour {
 		return HexChunkTypeID;
 	}
 	
-	public bool SpawnSpecialObject(GameObject Special)
+	public bool SpawnSpecialObject(GameObject Special, ref GameObject SpawnedObject)
 	{
 		int SpecialIndex = (int)(Random.value * PlaceHolderObjectArraySize);
 		
@@ -82,7 +82,7 @@ public class HexChunk : MonoBehaviour {
 			
 			Quaternion newRotation = Quaternion.Euler( ObjectRotation + new Vector3(0 ,Random.Range(0, SpecialRotationDegreeJitter * 2) - SpecialRotationDegreeJitter , 0));
 			
-			GameObject.Instantiate( Special, ObjectPosition + randomJitter, newRotation);
+			SpawnedObject = GameObject.Instantiate( Special, ObjectPosition + randomJitter, newRotation) as GameObject;
 		}
 		
 		return (PlaceHolderObjectArraySize <= 0);

@@ -18,6 +18,7 @@ public class HexGridGenerator : MonoBehaviour {
 	private List<GameObject> generated_hex_chunks;
 	
 	public GameObject HexWall = null;
+	public UIInitialiser UIInit;
 
 	// Use this for initialization
 	void Awake () 
@@ -123,6 +124,7 @@ public class HexGridGenerator : MonoBehaviour {
 				}						
 			}
 	
+			List<GameObject> TownList = new List<GameObject>();
 	
 			//Second Pass for the Specials
 			for (int i = 0; i < numSpecials; i++)
@@ -134,15 +136,28 @@ public class HexGridGenerator : MonoBehaviour {
 				{
 					int SpecialIndex = (int)(Random.value * SpecialObjects[HexChunkID].Count);
 					
+					GameObject SpanwnedObject = null;
+					
 					//if there are no placeholders in the hex chunk left remove it
-					if (hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>().SpawnSpecialObject(SpecialObjects[HexChunkID][SpecialIndex]))
+					if (hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>().SpawnSpecialObject(SpecialObjects[HexChunkID][SpecialIndex], ref SpanwnedObject))
 					{
 						hex_chunks_with_specials.RemoveAt(hexIndex);
+						
+						if (SpanwnedObject.GetComponent<TownHub>() != null)
+							TownList.Add(SpanwnedObject);
+						
 					}
 				}
 				else
 					i--;
 			}
+			
+			//pass the townhubs to the UIInitialiser
+			if (UIInit != null)
+			{
+				UIInit.InitialiseIcons(TownList);
+			}
+			
 			
 			//ThirdPass for getting rid of old placeholders
 			for (int i = 0; i < generated_hex_chunks.Count; i++)
