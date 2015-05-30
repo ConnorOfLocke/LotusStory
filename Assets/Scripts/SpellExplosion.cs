@@ -9,7 +9,8 @@ public class SpellExplosion : MonoBehaviour
 	private DestroyAfterTime AttachedDestroyAfterTime;
 	
 	private float StartRadius;
-
+	private Vector3 StartScale;
+	private Color StartColor;
 	// Use this for initialization
 	void Start ()
 	{
@@ -18,13 +19,31 @@ public class SpellExplosion : MonoBehaviour
 		AttachedDestroyAfterTime = GetComponent<DestroyAfterTime>();
 		
 		StartRadius = AttachedCollider.radius;
+		StartScale = transform.localScale;
+		if (StartScale.magnitude < GivenPower)
+		{
+			StartScale = Vector3.one * GivenPower;
+		}
+		
+		if (renderer.material != null)
+			StartColor = renderer.material.color;
+			
+		AttachedParticleSystem.startSpeed = GivenPower;
+		AttachedParticleSystem.maxParticles = (int)(GivenPower * 30.0f);
+		
+		AttachedParticleSystem.Play();
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (GivenPower > AttachedCollider.radius)
-			AttachedCollider.radius += (GivenPower) * Time.deltaTime;
+		transform.localScale = Vector3.Lerp(StartScale, StartScale * GivenPower, AttachedDestroyAfterTime.TimeLeftRatio );
+
+		if (renderer.material != null)
+		{
+			renderer.material.color = Color.Lerp(StartColor, Color.clear, AttachedDestroyAfterTime.TimeLeftRatio );
+		}
+
 
 	}
 }

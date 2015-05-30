@@ -21,14 +21,19 @@ public class PlayerContoller : MonoBehaviour {
 	public GameObject FireBallAimEffect = null;
 	public GameObject FireBallProjectile = null;
 	
-	private float SpellHoldTime = 0.0f;
+	public PLAYER_SPELL HeldSpell = PLAYER_SPELL.SPELL_NONE;
+	public float CurrMaxManaPower = 6.0f;
+	public float CurrMinManaPower = 5.0f;
+	public float MaxManaPower = 10.0f;
+	public float MinMaxPower = 0.0f;
+	
+	public float SpellHoldTime = 0.0f;
 	
 	private Plane GroundPlane;
 	private Camera AttachedCamera;
 	
 	private bool RightMouseDown = false;
 	
-	private PLAYER_SPELL HeldSpell = PLAYER_SPELL.SPELL_NONE;
 	private ProjectorLightFadeInAndExpand HeldSpellEffect;
 	
 	// Use this for initialization
