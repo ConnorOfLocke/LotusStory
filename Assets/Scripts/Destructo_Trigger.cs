@@ -20,7 +20,6 @@ public class Destructo_Trigger : MonoBehaviour {
 			}
 			else if (other.gameObject.GetComponent<TownHub>() != null)
 				Destroy(other.gameObject);
-				
 
 		}
 	}

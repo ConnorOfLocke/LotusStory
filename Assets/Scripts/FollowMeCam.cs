@@ -8,6 +8,16 @@ public class FollowMeCam : MonoBehaviour {
 	public float TimeToMove = 0.5f;
 	public float MouseSpring = 1.0f;
 	public float CutoffMouseMagnitude = 0.8f;
+	
+	public float ZoomInSubstractedDistance = 5;
+	public float ZoomOutAddedDistance = 5;
+
+	public bool IsZooming
+	{
+		get {return (ZoomDistance == StartDistance.magnitude);}
+	}
+	private float ZoomDistance;
+	private float ZoomDistanceToBe;
 
 	private Vector3 StartDistance;
 	private Vector3 SmoothVelocity;
@@ -16,18 +26,42 @@ public class FollowMeCam : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		ZoomDistanceToBe = GetComponent<Camera>().fieldOfView;
+		ZoomDistance = ZoomDistanceToBe;
+		
 		if (ObjectToFollow != null)
 		{
 			StartDistance = this.transform.position - ObjectToFollow.transform.position;
+			ZoomDistanceToBe = StartDistance.magnitude;
 		}
 		else
 			Debug.Log("FollowMeCam Script : Object To Follow not set");
 	}
 	
+	public void ZoomIn()
+	{
+		ZoomDistanceToBe -= ZoomInSubstractedDistance;
+	}
+	
+	public void ZoomOut()
+	{
+		ZoomDistanceToBe += ZoomOutAddedDistance;
+	}
+	
+	public void ResetZoom()
+	{
+		ZoomDistanceToBe = StartDistance.magnitude;
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
-		Vector3 PlaceToBe = ObjectToFollow.transform.position + StartDistance;
+		//Adjust Field of View
+		//GetComponent<Camera>().fieldOfView = Mathf.Lerp(GetComponent<Camera>().fieldOfView, ZoomDistanceToBe, 0.01f);
+		ZoomDistance = Mathf.Lerp(ZoomDistance, ZoomDistanceToBe, 0.1f);
+		Vector3 FinalZoomDistance = StartDistance.normalized * ZoomDistance;
+	
+		Vector3 PlaceToBe = ObjectToFollow.transform.position + FinalZoomDistance;
 		if (AttachedController != null)
 		{
 			if (AttachedController.SelectedObject != null)

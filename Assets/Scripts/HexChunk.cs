@@ -12,10 +12,17 @@ public class HexChunk : MonoBehaviour {
 	public GameObject[] PlaceHolderFlavorObjects;
 	public GameObject[] FlavorObjects;
 
-	private int PlaceHolderObjectArraySize;
+	public float ManaDrainPerSecond = 0.05f;
+	public float HexMana = 1.0f;
+	private float LastHexMana;
+	
 	public GameObject[] PlaceHolderSpecialObjects;
+	private int PlaceHolderObjectArraySize;
 
 	private int HexChunkTypeID;
+	private Color OrigHexColor;
+	private GameObject[] SpawnedFlavorObjects;
+	private Vector3[] OriginalFlavorScales;
 	
 	// Use this for initialization
 	void Start () {
@@ -27,10 +34,16 @@ public class HexChunk : MonoBehaviour {
 			SpawnFlavorObjects();
 			
 		PlaceHolderObjectArraySize = PlaceHolderSpecialObjects.Length;
+		
+		OrigHexColor = renderer.material.color;
+		LastHexMana = HexMana;
 	}
 	
 	private void SpawnFlavorObjects()
 	{
+		SpawnedFlavorObjects = new GameObject[PlaceHolderFlavorObjects.Length];
+		OriginalFlavorScales = new Vector3[PlaceHolderFlavorObjects.Length];
+	
 		for (int i = 0; i < PlaceHolderFlavorObjects.Length; i++)
 		{
 			Vector3 ObjectPosition = PlaceHolderFlavorObjects[i].transform.position;
@@ -44,7 +57,8 @@ public class HexChunk : MonoBehaviour {
 			
 			Quaternion newRotation = Quaternion.Euler( ObjectRotation + new Vector3(0 ,Random.Range(0, FlavorRotationDegreeJitter * 2) - FlavorRotationDegreeJitter , 0));
 			
-			GameObject.Instantiate( FlavorObjects[randomIndex], ObjectPosition + randomJitter, newRotation);
+			SpawnedFlavorObjects[i] = GameObject.Instantiate( FlavorObjects[randomIndex], ObjectPosition + randomJitter, newRotation) as GameObject;
+			OriginalFlavorScales[i] = SpawnedFlavorObjects[i].transform.localScale;
 		}
 	}
 	
@@ -99,8 +113,26 @@ public class HexChunk : MonoBehaviour {
 		}
 	}
 	
+	public void AbsorbMana()
+	{
+		HexMana -= ManaDrainPerSecond * Time.deltaTime;
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
+		if (LastHexMana != HexMana)
+		{
+			renderer.material.color = OrigHexColor * LastHexMana;
+			
+			for (int i = 0; i < SpawnedFlavorObjects.Length; i++)
+			{
+				Vector3 objectScale = OriginalFlavorScales[i] * LastHexMana;
+				SpawnedFlavorObjects[i].transform.localScale = objectScale;	
+			}
+			LastHexMana = Mathf.Lerp(LastHexMana, HexMana, 0.2f);
+		}
 	}
+	
+	
 }

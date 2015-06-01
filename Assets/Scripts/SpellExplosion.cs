@@ -4,13 +4,14 @@ using System.Collections;
 public class SpellExplosion : MonoBehaviour
 {
 	public float GivenPower;
+	public Color StartColor;
+	
 	private ParticleSystem AttachedParticleSystem;
 	private SphereCollider AttachedCollider;
 	private DestroyAfterTime AttachedDestroyAfterTime;
 	
 	private float StartRadius;
 	private Vector3 StartScale;
-	private Color StartColor;
 	// Use this for initialization
 	void Start ()
 	{
@@ -43,8 +44,6 @@ public class SpellExplosion : MonoBehaviour
 		{
 			renderer.material.color = Color.Lerp(StartColor, Color.clear, AttachedDestroyAfterTime.TimeLeftRatio );
 		}
-
-
 	}
 }
 

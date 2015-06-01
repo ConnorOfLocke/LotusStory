@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 	
 	public float LeanDegree = 20.0f;
 	
+	
 	private Vector3 PositionToBe;
 	private Quaternion RotationToBe;
 	private Vector3 Velocity;
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour {
 	private CharacterController AttachedContoller;
 
 	private float y_pos;
+	private float LastDistance;
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +33,8 @@ public class Player : MonoBehaviour {
 	public void SetTargetPosition(Vector3 Position)
 	{
 		PositionToBe = new Vector3(Position.x, y_pos, Position.z);
-		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
+		RotationToBe = Quaternion.LookRotation( (PositionToBe - transform.position).normalized);
+		LastDistance = Vector3.Distance(transform.position, PositionToBe);
 	}
 	
 	public void SetTargetRotation(Quaternion newRotation)
@@ -41,13 +44,26 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+	
+		Debug.DrawLine(transform.position, PositionToBe, Color.cyan);
 		float Distance = Vector3.Distance(transform.position, PositionToBe);
+		
+		//recalculate if not rotating enough
+		if (LastDistance - Distance < 0)
+		{
+			transform.rotation = Quaternion.LookRotation( (PositionToBe - transform.position).normalized);
+			RotationToBe = Quaternion.LookRotation( (PositionToBe - transform.position).normalized);
+		}
 		
 		//rotate towards wanted direction
 		transform.rotation = Quaternion.Slerp(transform.rotation, RotationToBe, RotatationDelta);
-		if ( Vector3.Distance(RotationToBe.eulerAngles, transform.rotation.eulerAngles) < 5)
-			transform.rotation = RotationToBe;
-
+		
+		if ( Vector3.Distance(RotationToBe.eulerAngles, transform.rotation.eulerAngles)< 10 && Distance > 10)
+		{
+			transform.rotation = Quaternion.LookRotation( (PositionToBe - transform.position).normalized);
+			RotationToBe = transform.rotation;
+		}
+			
 		//leaneriser
 		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( (AttachedContoller.velocity.magnitude / Speed) * LeanDegree, 0, 0));
 		
@@ -71,6 +87,8 @@ public class Player : MonoBehaviour {
 			AttachedContoller.Move( Vector3.zero);
 		}
 		
+		//to make DAMN SURE NO FLOATYNESS OCCURS
 		transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
+		LastDistance = Distance;
 	}
 }
