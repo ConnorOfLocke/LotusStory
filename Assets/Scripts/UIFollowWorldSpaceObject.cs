@@ -11,7 +11,7 @@ public class UIFollowWorldSpaceObject : MonoBehaviour {
 
 	void Start()
 	{
-		attachedTransform = GetComponent<RectTransform>();
+		attachedTransform = GetComponent<RectTransform>(); 
 	}
 
 	// Update is called once per frame
