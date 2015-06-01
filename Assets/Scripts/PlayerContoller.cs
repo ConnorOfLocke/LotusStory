@@ -65,6 +65,10 @@ public class PlayerContoller : MonoBehaviour {
 			//cast any spells currently being held down
 			if (!Input.GetMouseButton(1) && HeldSpell != PLAYER_SPELL.SPELL_NONE)
 			{
+				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+				if (cam != null)
+					cam.AddShake(1.0f);
+			
 				if (HeldSpell == PLAYER_SPELL.SPELL_FIREBALL)
 				{
 					GameObject pewpew = GameObject.Instantiate(FireBallProjectile, TargetPlayer.transform.position, Quaternion.identity) as GameObject;
@@ -99,6 +103,10 @@ public class PlayerContoller : MonoBehaviour {
 					LastHeldEffect = false;
 					AttachedCamera.GetComponent<FollowMeCam>().ZoomIn();
 				}
+				
+				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+				if (cam != null)
+					cam.AddShake(Time.deltaTime);
 				
 				CurrentEffect.transform.position = TargetPlayer.transform.position;
 				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
@@ -169,7 +177,10 @@ public class PlayerContoller : MonoBehaviour {
 			//FIRE BALL SPELL
 			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.Q))
 			{
-			
+				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+				if (cam != null)
+					cam.AddShake(Time.deltaTime * 4.0f);
+				
 				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
 				if (HeldSpellEffect == null)
 					HeldSpellEffect = (GameObject.Instantiate(FireBallAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();

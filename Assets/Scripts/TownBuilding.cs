@@ -45,6 +45,10 @@ public class TownBuilding : MonoBehaviour
 		//AttachedColliders = GetComponents<Collider>();
 
 		BuildingActive = false;
+		
+		FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+		if (cam != null)
+			cam.AddShake(0.3f);
 
 		//AttachedMeshRenderer.enabled = false;
 		//foreach (Collider c in AttachedColliders)

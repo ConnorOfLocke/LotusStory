@@ -12,6 +12,10 @@ public class FollowMeCam : MonoBehaviour {
 	public float ZoomInSubstractedDistance = 5;
 	public float ZoomOutAddedDistance = 5;
 
+	public float CurrentShakeAmount = 0.0f;
+	public float MaxShakeAmount = 1.0f;
+	public float MaxShakeTime = 2.0f;
+
 	public bool IsZooming
 	{
 		get {return (ZoomDistance == StartDistance.magnitude);}
@@ -88,6 +92,26 @@ public class FollowMeCam : MonoBehaviour {
 		
 		transform.position = Vector3.SmoothDamp(transform.position, PlaceToBe, ref SmoothVelocity, TimeToMove);
 		
+		//Shakey shakes
+		if (CurrentShakeAmount > 0)
+		{
+			Vector3 Shakeyshakes;
+			if (CurrentShakeAmount < MaxShakeAmount)
+				Shakeyshakes = Random.insideUnitSphere * CurrentShakeAmount;
+			else
+				Shakeyshakes = Random.insideUnitSphere * MaxShakeAmount;
+				
+			transform.position += Shakeyshakes  * 1f;
+			CurrentShakeAmount -= Time.deltaTime;
+		}
 	
+	}
+	
+	public void AddShake(float ShakeAmount)
+	{
+		if (CurrentShakeAmount + ShakeAmount < MaxShakeTime)
+			CurrentShakeAmount += ShakeAmount;
+		else
+			CurrentShakeAmount = MaxShakeTime;
 	}
 }

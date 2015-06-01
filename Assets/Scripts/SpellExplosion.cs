@@ -15,6 +15,10 @@ public class SpellExplosion : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+		if (cam != null)
+			cam.AddShake(GivenPower * 0.1f);
+	
 		AttachedParticleSystem = GetComponent<ParticleSystem>();
 		AttachedCollider = GetComponent<SphereCollider>();
 		AttachedDestroyAfterTime = GetComponent<DestroyAfterTime>();

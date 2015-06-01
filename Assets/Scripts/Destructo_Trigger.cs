@@ -19,7 +19,12 @@ public class Destructo_Trigger : MonoBehaviour {
 				}
 			}
 			else if (other.gameObject.GetComponent<TownHub>() != null)
+			{
 				Destroy(other.gameObject);
+				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+				if (cam != null)
+					cam.AddShake(1.0f);
+			}
 
 		}
 	}
