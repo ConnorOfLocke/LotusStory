@@ -10,8 +10,9 @@ public class UIInitialiser : MonoBehaviour {
 	public Canvas UICanvas;
 	public GameObject TownIcon_Prefab;
 	public GameObject Collusus_Prefab;
+	public GameObject CreatureSpawner_Prefab;
 	
-	public void InitialiseIcons( List<GameObject> TownHubs)
+	public void InitialiseIcons( List<GameObject> TownHubs, List<GameObject> CreatureSpanwners)
 	{
 		if (CollususInScene != null)
 		{
@@ -27,6 +28,14 @@ public class UIInitialiser : MonoBehaviour {
 			IconPointer.transform.SetParent(UICanvas.transform);
 			IconPointer.GetComponent<UIFollowWorldSpaceObject>().CameraInScene = CameraInScene;
 			IconPointer.GetComponent<UIFollowWorldSpaceObject>().FollowObject = hub;
+		}
+		
+		foreach( GameObject cave in CreatureSpanwners)
+		{
+			GameObject IconPointer = GameObject.Instantiate(CreatureSpawner_Prefab) as GameObject;
+			IconPointer.transform.SetParent(UICanvas.transform);
+			IconPointer.GetComponent<UIFollowWorldSpaceObject>().CameraInScene = CameraInScene;
+			IconPointer.GetComponent<UIFollowWorldSpaceObject>().FollowObject = cave;
 		}
 	}
 	

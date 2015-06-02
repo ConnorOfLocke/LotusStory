@@ -56,8 +56,6 @@ public class Wolf : MonoBehaviour
 			
 		//Rotate the things
 		transform.rotation = Quaternion.Slerp(transform.rotation, RotationToBe, RotatationDelta);
-		if ( Vector3.Distance(RotationToBe.eulerAngles, transform.rotation.eulerAngles) < 5)
-			transform.rotation = RotationToBe;
 
 		//lean the thing
 		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( AttachedContoller.velocity.magnitude / Speed * LeanDegree, 0, 0));
@@ -80,6 +78,8 @@ public class Wolf : MonoBehaviour
 		}
 		else
 		{
+			//PlayerInScene
+			PlayerInScene.GetComponent<Player>().AntiAbsorb();
 			AttachedContoller.Move( Vector3.zero);
 		}
 	}

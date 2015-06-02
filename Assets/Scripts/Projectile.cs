@@ -82,6 +82,7 @@ public class Projectile : MonoBehaviour
 		else if (other.gameObject.tag == "Denizen")
 		{
 			Explode();
+			Destroy(other.gameObject);
 		}
 		
 	

@@ -113,9 +113,11 @@ public class HexChunk : MonoBehaviour {
 		}
 	}
 	
-	public void AbsorbMana()
+	public bool AbsorbMana()
 	{
-		HexMana -= ManaDrainPerSecond * Time.deltaTime;
+		if (HexMana > 0)
+			HexMana -= ManaDrainPerSecond * Time.deltaTime;
+		return (HexMana > 0);
 	}
 	
 	// Update is called once per frame

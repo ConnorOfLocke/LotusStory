@@ -6,9 +6,11 @@ public class SpellExplosion : MonoBehaviour
 	public float GivenPower;
 	public Color StartColor;
 	
+	private AudioSource AttachedAudioSource;
 	private ParticleSystem AttachedParticleSystem;
 	private SphereCollider AttachedCollider;
 	private DestroyAfterTime AttachedDestroyAfterTime;
+	
 	
 	private float StartRadius;
 	private Vector3 StartScale;
@@ -22,6 +24,10 @@ public class SpellExplosion : MonoBehaviour
 		AttachedParticleSystem = GetComponent<ParticleSystem>();
 		AttachedCollider = GetComponent<SphereCollider>();
 		AttachedDestroyAfterTime = GetComponent<DestroyAfterTime>();
+		AttachedAudioSource = GetComponent<AudioSource>();
+	
+		AttachedAudioSource.pitch += Random.value * 0.01f - GivenPower * 0.1f;
+		AttachedAudioSource.Play();
 		
 		StartRadius = AttachedCollider.radius;
 		StartScale = transform.localScale;

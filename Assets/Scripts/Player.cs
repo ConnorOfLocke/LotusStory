@@ -11,6 +11,9 @@ public class Player : MonoBehaviour {
 	
 	public float LeanDegree = 20.0f;
 	
+	public PlayerContoller PlayerControllerInScene;
+	
+	public GameObject DamageEffect;
 	
 	private Vector3 PositionToBe;
 	private Quaternion RotationToBe;
@@ -35,6 +38,24 @@ public class Player : MonoBehaviour {
 		PositionToBe = new Vector3(Position.x, y_pos, Position.z);
 		RotationToBe = Quaternion.LookRotation( (PositionToBe - transform.position).normalized);
 		LastDistance = Vector3.Distance(transform.position, PositionToBe);
+	}
+	
+	public void AntiAbsorb()
+	{
+		if (PlayerControllerInScene.CurrMinManaPower > 0)
+		{
+			PlayerControllerInScene.CurrMaxManaPower -= Time.deltaTime;
+			PlayerControllerInScene.CurrMinManaPower -= Time.deltaTime;
+			//spawns an effect every 0.05 seconds
+			if ((int)(Time.realtimeSinceStartup * 100) % 5 < 1)
+				GameObject.Instantiate(DamageEffect, transform.position, Quaternion.identity);
+				
+			FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+			if (cam != null)
+				cam.AddShake(Time.deltaTime * 10.0f);
+				
+			
+		}
 	}
 	
 	public void SetTargetRotation(Quaternion newRotation)

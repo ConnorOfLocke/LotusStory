@@ -9,6 +9,8 @@ public class HexGridGenerator : MonoBehaviour {
 
 	public float hex_radius = 0.5f;
 
+	public GameObject PlayerInScene;
+
 	private List<HexChunk> BaseTerrainHexs;
 	private List<float> BaseTerrainChances;
 	private float OverallChance;
@@ -137,6 +139,7 @@ public class HexGridGenerator : MonoBehaviour {
 			}
 	
 			List<GameObject> TownList = new List<GameObject>();
+			List<GameObject> CaveList = new List<GameObject>();
 			List<GameObject> TownHexChunkList = new List<GameObject>();
 			//Second Pass for the Specials
 			for (int i = 0; i < numSpecials; i++)
@@ -148,19 +151,26 @@ public class HexGridGenerator : MonoBehaviour {
 				{
 					int SpecialIndex = (int)(Random.value * SpecialObjects[HexChunkID].Count);
 					
-					GameObject SpanwnedObject = null;
+					GameObject SpawnedObject = null;
 					
 					//if there are no placeholders in the hex chunk left remove it
-					if (hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>().SpawnSpecialObject(SpecialObjects[HexChunkID][SpecialIndex], ref SpanwnedObject))
+					if (hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>().SpawnSpecialObject(SpecialObjects[HexChunkID][SpecialIndex], ref SpawnedObject))
 					{
 					
-						if (SpanwnedObject.GetComponent<TownHub>() != null)
+						if (SpawnedObject.GetComponent<TownHub>() != null)
 						{
-							TownList.Add(SpanwnedObject);
+							TownList.Add(SpawnedObject);
 							TownHexChunkList.Add(hex_chunks_with_specials[hexIndex]);
+							SpawnedObject.GetComponent<TownHub>().AttachedChunk = hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>();
 						}
+						if (SpawnedObject.GetComponent<CreatureSpawner>() != null)
+						{
+							CaveList.Add(SpawnedObject);
+							SpawnedObject.GetComponent<CreatureSpawner>().PlayerInScene = PlayerInScene;
+							SpawnedObject.GetComponent<CreatureSpawner>().AttachedHexChunk = hex_chunks_with_specials[hexIndex].GetComponent<HexChunk>();
+						}
+						
 						hex_chunks_with_specials.RemoveAt(hexIndex);
-
 					}
 				}
 				else
@@ -169,7 +179,7 @@ public class HexGridGenerator : MonoBehaviour {
 			
 			//pass the townhubs to the UIInitialiser
 			if (UIInit != null)
-				UIInit.InitialiseIcons(TownList);
+				UIInit.InitialiseIcons(TownList, CaveList);
 			
 			//inits the collusus
 			if (CollususInScene != null)

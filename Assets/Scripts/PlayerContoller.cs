@@ -16,6 +16,8 @@ public class PlayerContoller : MonoBehaviour {
 	public GameObject MouseRightClickEffect = null;
 	public GameObject SelectedObject = null;
 	public float MaxDistanceToSelectObject = 20.0f;
+	public AudioSource ChargeSoundSource;
+	public AudioSource SpellCastSource;
 	
 	public float SpellProjectorHeight = 20.0f;
 	public GameObject FireBallAimEffect = null;
@@ -47,6 +49,8 @@ public class PlayerContoller : MonoBehaviour {
 	
 		GroundPlane = new Plane( new Vector3(0, -1, 0), TargetPlayer.transform.position);
 		AttachedCamera = GetComponent<Camera>();
+		ChargeSoundSource.volume = 0.01f;
+		
 	}
 	
 	// Update is called once per frame
@@ -68,6 +72,10 @@ public class PlayerContoller : MonoBehaviour {
 				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
 				if (cam != null)
 					cam.AddShake(1.0f);
+			
+				ChargeSoundSource.volume = 0.0f;
+				//SpellCastSource.pitch = 1.0f + Random.value * 0.05f;
+				//SpellCastSource.Play();
 			
 				if (HeldSpell == PLAYER_SPELL.SPELL_FIREBALL)
 				{
@@ -117,14 +125,16 @@ public class PlayerContoller : MonoBehaviour {
 				{
 					if (hitInfo.collider.gameObject.GetComponent<HexChunk>() != null)
 					{
-						hitInfo.collider.gameObject.GetComponent<HexChunk>().AbsorbMana();
-						if (CurrMaxManaPower < MaxManaPower)
+						if (hitInfo.collider.gameObject.GetComponent<HexChunk>().AbsorbMana())
 						{
-							CurrMaxManaPower += ManaAbsorbPerSecond * Time.deltaTime;
-							CurrMinManaPower += ManaAbsorbPerSecond * Time.deltaTime;
+							if (CurrMaxManaPower < MaxManaPower)
+							{
+								CurrMaxManaPower += ManaAbsorbPerSecond * Time.deltaTime;
+								CurrMinManaPower += ManaAbsorbPerSecond * Time.deltaTime;
+							}
+							else
+								CurrMaxManaPower = MaxManaPower;
 						}
-						else
-							CurrMaxManaPower = MaxManaPower;
 					}
 				}
 				
@@ -177,9 +187,16 @@ public class PlayerContoller : MonoBehaviour {
 			//FIRE BALL SPELL
 			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.Q))
 			{
+				if (!ChargeSoundSource.isPlaying)
+					ChargeSoundSource.Play();
+				
+				ChargeSoundSource.volume += Time.deltaTime * 10;
+				if (ChargeSoundSource.volume > 0.7f)
+					ChargeSoundSource.volume = 0.7f;
+			
 				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
 				if (cam != null)
-					cam.AddShake(Time.deltaTime * 4.0f);
+					cam.AddShake(Time.deltaTime * 6.0f);
 				
 				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
 				if (HeldSpellEffect == null)

@@ -12,6 +12,7 @@ public class TownHub : MonoBehaviour
 	private float CurrentTimeToSpawn = 0.0f;
 	private int LastSpawnedSet = -1;
 
+	public HexChunk AttachedChunk;
 	
 	void Start ()
 	{
@@ -24,6 +25,7 @@ public class TownHub : MonoBehaviour
 		{
 			SpawnTier();
 			CurrentTimeToSpawn = Random.Range(0, 2 * TimeToSpawnJitter) - TimeToSpawnJitter;
+			AttachedChunk.AbsorbMana();
 		}
 		else
 			CurrentTimeToSpawn += Time.deltaTime;
