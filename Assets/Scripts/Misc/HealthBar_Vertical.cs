@@ -20,8 +20,15 @@ public class HealthBar_Vertical : MonoBehaviour
 		float MaxManaScale = BackgroundToScaleTo.rectTransform.rect.height;
 		float CurrentHealth = CurrentHealthScale * MaxManaScale;
 		
+		//shakey shakes
+		if (Mathf.Abs(HealthBar.rectTransform.offsetMax.magnitude - new Vector2(HealthBar.rectTransform.offsetMax.x, CurrentHealth).magnitude) > 1.0f)
+		{
+			Vector2 jitter = Random.insideUnitSphere * 2;
+			transform.position += new Vector3(jitter.x, jitter.y, 0);
+		}
+		
 		HealthBar.rectTransform.offsetMax = Vector2.Lerp(	HealthBar.rectTransform.offsetMax,
-		                                                 new Vector2(HealthBar.rectTransform.offsetMax.x, CurrentHealth),
+		                                                 	new Vector2(HealthBar.rectTransform.offsetMax.x, CurrentHealth),
 		                                               		LerpFactor);
 		
 		

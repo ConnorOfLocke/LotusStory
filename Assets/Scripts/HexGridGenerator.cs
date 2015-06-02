@@ -20,6 +20,7 @@ public class HexGridGenerator : MonoBehaviour {
 	public GameObject HexWall = null;
 	public UIInitialiser UIInit;
 	public Collusus CollususInScene;
+	public TownHealthBarController TownHealthBar;
 
 	// Use this for initialization
 	void Awake () 
@@ -31,6 +32,7 @@ public class HexGridGenerator : MonoBehaviour {
 		SpecialObjects = new List<List<GameObject>>();
 		OverallChance = 0;
 		HexGridGeneratorChunk[] attachedChunks = GetComponents<HexGridGeneratorChunk>();
+		
 		foreach(HexGridGeneratorChunk chunk in attachedChunks)
 		{
 			BaseTerrainHexs.Add(chunk.BaseTerrain);
@@ -172,6 +174,9 @@ public class HexGridGenerator : MonoBehaviour {
 			//inits the collusus
 			if (CollususInScene != null)
 				CollususInScene.Initialise(left_edge_hex_chunks, right_edge_hex_chunks, TownHexChunkList);
+			
+			if (TownHealthBar != null)
+				TownHealthBar.Initialise(TownList);
 			
 			//ThirdPass for getting rid of old placeholders
 			for (int i = 0; i < generated_hex_chunks.Count; i++)

@@ -125,10 +125,13 @@ public class HexChunk : MonoBehaviour {
 		{
 			renderer.material.color = OrigHexColor * LastHexMana;
 			
-			for (int i = 0; i < SpawnedFlavorObjects.Length; i++)
+			if (LastHexMana >= 0)
 			{
-				Vector3 objectScale = OriginalFlavorScales[i] * LastHexMana;
-				SpawnedFlavorObjects[i].transform.localScale = objectScale;	
+				for (int i = 0; i < SpawnedFlavorObjects.Length; i++)
+				{
+					Vector3 objectScale = OriginalFlavorScales[i] * LastHexMana;
+					SpawnedFlavorObjects[i].transform.localScale = objectScale;	
+				}
 			}
 			LastHexMana = Mathf.Lerp(LastHexMana, HexMana, 0.2f);
 		}
