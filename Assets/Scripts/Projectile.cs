@@ -53,13 +53,39 @@ public class Projectile : MonoBehaviour
 		}
 		else
 		{
-			GameObject Explosion = GameObject.Instantiate(EffectOnArrival, transform.position, Quaternion.Euler(-90, 0, 0)) as GameObject;
-			if (Explosion.GetComponent<SpellExplosion>() != null)
-			{
-				Explosion.GetComponent<SpellExplosion>().GivenPower = GivenPower;
-			}
-			Destroy(this.gameObject);
+			Explode();
 		}
 	}
+	
+	void Explode()
+	{
+		GameObject Explosion = GameObject.Instantiate(EffectOnArrival, transform.position, Quaternion.Euler(-90, 0, 0)) as GameObject;
+		if (Explosion.GetComponent<SpellExplosion>() != null)
+		{
+			Explosion.GetComponent<SpellExplosion>().GivenPower = GivenPower;
+		}
+		Destroy(this.gameObject);
+	}
+	
+	void OnTriggerEnter(Collider other )
+	{
+		if (other.gameObject.tag == "House")
+		{
+			Explode();
+		}
+		else if ( other.gameObject.tag == "Collusus")
+		{
+			Explode();
+			if (other.gameObject.GetComponent<Collusus>() != null)
+				other.gameObject.GetComponent<Collusus>().Health -= GivenPower;
+		}
+		else if (other.gameObject.tag == "Denizen")
+		{
+			Explode();
+		}
+		
+	
+	}
+	
 }
 

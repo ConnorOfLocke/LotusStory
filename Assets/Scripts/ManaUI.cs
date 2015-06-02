@@ -10,17 +10,15 @@ public class ManaUI : MonoBehaviour {
 	public Image CurrentSpellBar;
 	public float LerpFactor = 0.2f;
 
-	private float MaxManaScale;
 	
 	// Use this for initialization
 	void Start () {
-		MaxManaScale = BackgroundBarToScaleTo.rectTransform.rect.xMax;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		MaxManaScale = BackgroundBarToScaleTo.rectTransform.rect.width;
+		float MaxManaScale = BackgroundBarToScaleTo.rectTransform.rect.width;
 
 		float CurrMinManaPower = AttachedPlayer.CurrMinManaPower;
 		float CurrMaxManaPower = AttachedPlayer.CurrMaxManaPower;
