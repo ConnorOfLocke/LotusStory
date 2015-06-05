@@ -152,8 +152,6 @@ public class PlayerContoller : MonoBehaviour {
 				
 				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
 				TargetPlayer.SetTargetRotation(Quaternion.LookRotation( Direction));
-			
-			
 			}
 			else
 			{
@@ -161,9 +159,7 @@ public class PlayerContoller : MonoBehaviour {
 				{
 					Destroy(CurrentEffect);
 					AttachedCamera.GetComponent<FollowMeCam>().ResetZoom();
-					
 				}
-				
 			}
 			
 			////////////////////////////////////////////

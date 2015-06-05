@@ -13,7 +13,15 @@ public class TownHub : MonoBehaviour
 	private int LastSpawnedSet = -1;
 
 	public HexChunk AttachedChunk;
-	
+
+	public GameObject SpawnedVillager;
+	public float VillagerSpawnDelay = 20.0f;
+	public float VillagerSpawnJitter = 5.0f;
+	private float CurVillagerSpawnTimer = 0.0f;
+
+	public int MaxNumVillagers = 10;
+	private int CurrentNumVillagers = 0;
+
 	void Start ()
 	{
 		CurrentBuildingSets = new List<GameObject> ();
@@ -29,6 +37,29 @@ public class TownHub : MonoBehaviour
 		}
 		else
 			CurrentTimeToSpawn += Time.deltaTime;
+
+		if (CurrentNumVillagers < MaxNumVillagers)
+		{
+			if (CurVillagerSpawnTimer <= 0)
+				SpawnVillager ();
+			else
+				CurVillagerSpawnTimer -= Time.deltaTime;
+		}
+
+	}
+
+	void SpawnVillager()
+	{
+		GameObject newVillager = GameObject.Instantiate(SpawnedVillager, transform.position, Quaternion.identity) as GameObject;
+
+		//randomRotation to Start from
+		Vector2 RandDir = Random.insideUnitCircle;
+		newVillager.transform.rotation = Quaternion.LookRotation ( new Vector3(RandDir.x, 0, RandDir.y));
+
+		newVillager.GetComponent<Villager> ().TownHub = this.gameObject;
+	
+		CurVillagerSpawnTimer = VillagerSpawnDelay + Random.value * VillagerSpawnJitter;
+		CurrentNumVillagers ++;
 	}
 
 	void SpawnTier()
