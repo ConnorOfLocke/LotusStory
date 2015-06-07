@@ -20,16 +20,19 @@ public class TownHealthBarController : MonoBehaviour
 	void Update ()
 	{
 		//check all the towns are still alive
-		for (int i = 0 ; i < TownList.Count; i++)
+		if (TownList != null)
 		{
-			if (TownList[i] == null)
+			for (int i = 0 ; i < TownList.Count; i++)
 			{
-				TownList.RemoveAt(i);
-				i--;
+				if (TownList[i] == null)
+				{
+					TownList.RemoveAt(i);
+					i--;
+				}
 			}
+			
+			AttachedHealthBar.CurrentHealthScale = (float)TownList.Count / OriginalTowns;
 		}
-		
-		AttachedHealthBar.CurrentHealthScale = (float)TownList.Count / OriginalTowns;
 	}
 }
 
