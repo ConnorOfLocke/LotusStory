@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour
 	void Start ()
 	{
 		float ThrowHeight = Mathf.Clamp( MaxHeight - Vector3.Distance(Source, Destination), 1, MaxHeight);
-		MidPoint = ((Source + Destination) * 0.5f)  + new Vector3(0, ThrowHeight  ,0);
+		MidPoint = ((Source + Destination) * 0.5f)  + new Vector3(0, ThrowHeight, 0);
 		OriginalScale = transform.localScale;
 	}
 
@@ -42,13 +42,19 @@ public class Projectile : MonoBehaviour
 		}
 		else
 			transform.localScale = OriginalScale * MinScale;
+		
 	
 		if (TimeSoFar < TimeToHit)
 		{
 			Vector3 P1 = Vector3.Lerp(Source, MidPoint, (TimeSoFar / TimeToHit));
 			Vector3 P2 = Vector3.Lerp(MidPoint, Destination, (TimeSoFar / TimeToHit));
-		
+			
+			Vector3 LastPos = transform.position;
 			transform.position = Vector3.Lerp(P1, P2, (TimeSoFar / TimeToHit));
+			
+			Vector3 Direction = (transform.position - LastPos).normalized;
+			//Direction = Quaternion.Euler(0, -90, 0) * Direction;
+			this.transform.localRotation = Quaternion.LookRotation(Direction);
 			TimeSoFar += Time.deltaTime;	
 		}
 		else

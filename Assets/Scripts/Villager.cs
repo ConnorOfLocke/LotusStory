@@ -110,25 +110,17 @@ public class Villager : MonoBehaviour {
 			}
 			else if (Vector3.Distance (transform.position + FinalDirectionVector * 2, HubPosition) > MaxDistanceFromHub)
 			{
-				FinalDirectionVector += LeftFeeler * 1000;
+				FinalDirectionVector += LeftFeeler * 10;
 			}
 
 			//shy away from any obstacles
-			RaycastHit FrontRay;
-			if (Physics.Raycast(transform.position, CurVelocity, out FrontRay, Speed, LayerMask.NameToLayer("DenizenCollision")))
+			if ( Physics.Raycast(transform.position, LeftFeeler, LeftFeeler.magnitude, LayerMask.NameToLayer("DenizenCollision")))
 			{
-				if (! Physics.Raycast(transform.position, LeftFeeler, LeftFeeler.magnitude, LayerMask.NameToLayer("DenizenCollision")))
-				{
-					FinalDirectionVector += LeftFeeler * 10;
-				}
-				else if (! Physics.Raycast(transform.position, RightFeeler, LeftFeeler.magnitude, LayerMask.NameToLayer("DenizenCollision")))
-		        {
-					FinalDirectionVector += RightFeeler * 10;
-				}
-				else
-				{
-					FinalDirectionVector += LeftFeeler * 1000;
-				}
+				FinalDirectionVector += RightFeeler * 10;
+			}
+			else if ( Physics.Raycast(transform.position, RightFeeler, LeftFeeler.magnitude, LayerMask.NameToLayer("DenizenCollision")))
+	        {
+				FinalDirectionVector += LeftFeeler * 10;
 			}
 
 			//finally lerp rotate towards the final vector

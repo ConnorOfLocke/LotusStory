@@ -14,7 +14,7 @@ public class TownHub : MonoBehaviour
 
 	public HexChunk AttachedChunk;
 
-	public GameObject SpawnedVillager;
+	public GameObject[] SpawnedVillagers;
 	public float VillagerSpawnDelay = 20.0f;
 	public float VillagerSpawnJitter = 5.0f;
 	private float CurVillagerSpawnTimer = 0.0f;
@@ -50,7 +50,9 @@ public class TownHub : MonoBehaviour
 
 	void SpawnVillager()
 	{
-		GameObject newVillager = GameObject.Instantiate(SpawnedVillager, transform.position, Quaternion.identity) as GameObject;
+		int randIndex = (int)(Random.value * SpawnedVillagers.Length);
+	
+		GameObject newVillager = GameObject.Instantiate(SpawnedVillagers[randIndex], transform.position, Quaternion.identity) as GameObject;
 
 		//randomRotation to Start from
 		Vector2 RandDir = Random.insideUnitCircle;
