@@ -1,18 +1,21 @@
 using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour
+public enum ePROJECTILE_TYPE
 {
+	TYPE_ARC,
+	TYPE_STRAIGHT,
+}
+
+public abstract class Projectile : MonoBehaviour
+{
+	protected ePROJECTILE_TYPE Type = ePROJECTILE_TYPE.TYPE_ARC;
+
 	public Vector3 Source;
-	private Vector3 MidPoint;
 	public Vector3 Destination;
 	
-	public float MaxHeight = 200.0f;
-	
 	public GameObject EffectOnArrival;
-	public float TimeToHit = 2.0f;
-
-	private float TimeSoFar = 0;
+	
 	public float GivenPower = 0;
 
 	public float MaxScale = 3.0f;
@@ -21,14 +24,12 @@ public class Projectile : MonoBehaviour
 
 	public Vector3 OriginalScale;
 
-	void Start ()
+	protected void Start ()
 	{
-		float ThrowHeight = Mathf.Clamp( MaxHeight - Vector3.Distance(Source, Destination), 1, MaxHeight);
-		MidPoint = ((Source + Destination) * 0.5f)  + new Vector3(0, ThrowHeight, 0);
 		OriginalScale = transform.localScale;
 	}
 
-	void Update ()
+	virtual public void Update ()
 	{
 		if (AttachedParticleMeter != null)
 			AttachedParticleMeter.emissionRate = GivenPower * 20;
@@ -43,35 +44,9 @@ public class Projectile : MonoBehaviour
 		else
 			transform.localScale = OriginalScale * MinScale;
 		
-	
-		if (TimeSoFar < TimeToHit)
-		{
-			Vector3 P1 = Vector3.Lerp(Source, MidPoint, (TimeSoFar / TimeToHit));
-			Vector3 P2 = Vector3.Lerp(MidPoint, Destination, (TimeSoFar / TimeToHit));
-			
-			Vector3 LastPos = transform.position;
-			transform.position = Vector3.Lerp(P1, P2, (TimeSoFar / TimeToHit));
-			
-			Vector3 Direction = (transform.position - LastPos).normalized;
-			//Direction = Quaternion.Euler(0, -90, 0) * Direction;
-			this.transform.localRotation = Quaternion.LookRotation(Direction);
-			TimeSoFar += Time.deltaTime;	
-		}
-		else
-		{
-			Explode();
-		}
 	}
 	
-	void Explode()
-	{
-		GameObject Explosion = GameObject.Instantiate(EffectOnArrival, transform.position, Quaternion.Euler(-90, 0, 0)) as GameObject;
-		if (Explosion.GetComponent<SpellExplosion>() != null)
-		{
-			Explosion.GetComponent<SpellExplosion>().GivenPower = GivenPower;
-		}
-		Destroy(this.gameObject);
-	}
+	abstract protected void Explode();
 	
 	void OnTriggerEnter(Collider other )
 	{

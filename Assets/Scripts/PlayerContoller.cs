@@ -5,7 +5,7 @@ public enum PLAYER_SPELL
 {
 	SPELL_NONE,
 	SPELL_FIREBALL,
-	SPELL_2,
+	SPELL_ICICLE,
 	SPELL_3
 }
 
@@ -22,6 +22,9 @@ public class PlayerContoller : MonoBehaviour {
 	public float SpellProjectorHeight = 20.0f;
 	public GameObject FireBallAimEffect = null;
 	public GameObject FireBallProjectile = null;
+	
+	public GameObject IcicleAimEffect = null;
+	public GameObject IcicleProjectile = null;
 	
 	public PLAYER_SPELL HeldSpell = PLAYER_SPELL.SPELL_NONE;
 	public float CurrMaxManaPower = 6.0f;
@@ -83,6 +86,14 @@ public class PlayerContoller : MonoBehaviour {
 					pewpew.GetComponent<Projectile>().Destination = mouseRay.GetPoint(RayDistance);
 					pewpew.GetComponent<Projectile>().Source = TargetPlayer.transform.position;
 					pewpew.GetComponent<Projectile>().GivenPower = SpellHoldTime;
+				}
+				else if (HeldSpell == PLAYER_SPELL.SPELL_ICICLE)
+				{
+					GameObject pewpew = GameObject.Instantiate(IcicleProjectile, TargetPlayer.transform.position, Quaternion.identity) as GameObject;
+					pewpew.GetComponent<Projectile>().Destination = mouseRay.GetPoint(RayDistance);
+					pewpew.GetComponent<Projectile>().Source = TargetPlayer.transform.position;
+					pewpew.GetComponent<Projectile>().GivenPower = SpellHoldTime;
+				
 				}
 				
 				float SpellPower = SpellHoldTime - CurrMinManaPower;
@@ -192,7 +203,7 @@ public class PlayerContoller : MonoBehaviour {
 			
 				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
 				if (cam != null)
-					cam.AddShake(Time.deltaTime * 6.0f);
+					cam.AddShake(Time.deltaTime * 10.0f);
 				
 				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
 				if (HeldSpellEffect == null)
@@ -208,10 +219,33 @@ public class PlayerContoller : MonoBehaviour {
 				else if (SpellHoldTime < CurrMaxManaPower)
 					SpellHoldTime += Time.deltaTime;
 			}
-			//Spell 2
-			else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.W))
+			//ICICLE 
+			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.W))
 			{
+				if (!ChargeSoundSource.isPlaying)
+					ChargeSoundSource.Play();
 				
+				ChargeSoundSource.volume += Time.deltaTime * 10;
+				if (ChargeSoundSource.volume > 0.7f)
+					ChargeSoundSource.volume = 0.7f;
+				
+				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+				if (cam != null)
+					cam.AddShake(Time.deltaTime * 6.0f);
+				
+				HeldSpell = PLAYER_SPELL.SPELL_ICICLE;
+				if (HeldSpellEffect == null)
+					HeldSpellEffect = (GameObject.Instantiate(IcicleAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
+				
+				HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
+				
+				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
+				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
+				
+				if (SpellHoldTime < CurrMinManaPower)
+					SpellHoldTime = CurrMinManaPower;				
+				else if (SpellHoldTime < CurrMaxManaPower)
+					SpellHoldTime += Time.deltaTime;
 				
 			}
 			//spell 3
