@@ -121,7 +121,8 @@ public class Collusus : MonoBehaviour {
 		Debug.DrawLine(transform.position + new Vector3(0, 10, 0), transform.position + (EndPos - transform.position).normalized * 10 + new Vector3(0, 10, 0), Color.green); 
 		
 		//Rotate the things
-		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation( PositionToBe - transform.position), RotatationDelta);
+		Quaternion LookDirection = Quaternion.LookRotation( PositionToBe - transform.position);
+		transform.rotation = Quaternion.Slerp(transform.rotation, LookDirection * Quaternion.Euler(0, 90, 0), RotatationDelta);
 			
 		float Distance = Vector3.Distance(transform.position, PositionToBe);
 	
@@ -129,7 +130,7 @@ public class Collusus : MonoBehaviour {
 		if (Distance > StopDistance)
 		{
 			//Vector3 Direction = (PositionToBe - transform.position).normalized;
-			Vector3 Direction = (transform.rotation * new Vector3(0, 0, 1));
+			Vector3 Direction = (LookDirection * new Vector3(0, 0, 1));
 			Vector3 Movement = Direction.normalized * Speed * Time.deltaTime;
 			Movement.y = 0;
 

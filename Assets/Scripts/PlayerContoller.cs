@@ -22,6 +22,7 @@ public class PlayerContoller : MonoBehaviour {
 	public float SpellProjectorHeight = 20.0f;
 	public GameObject FireBallAimEffect = null;
 	public GameObject FireBallProjectile = null;
+	public float FireBallMaxDistance = 40.0f;
 	
 	public GameObject IcicleAimEffect = null;
 	public GameObject IcicleProjectile = null;
@@ -83,7 +84,19 @@ public class PlayerContoller : MonoBehaviour {
 				if (HeldSpell == PLAYER_SPELL.SPELL_FIREBALL)
 				{
 					GameObject pewpew = GameObject.Instantiate(FireBallProjectile, TargetPlayer.transform.position, Quaternion.identity) as GameObject;
-					pewpew.GetComponent<Projectile>().Destination = mouseRay.GetPoint(RayDistance);
+					
+					Vector3 DestinationPos = mouseRay.GetPoint(RayDistance);
+					if (Vector3.Distance(DestinationPos,TargetPlayer.transform.position) > FireBallMaxDistance)
+					{
+						DestinationPos = TargetPlayer.transform.position + 
+										(DestinationPos - TargetPlayer.transform.position).normalized * (float)FireBallMaxDistance; 
+					
+						pewpew.GetComponent<Projectile>().Destination = DestinationPos;
+					}
+					else
+						pewpew.GetComponent<Projectile>().Destination = DestinationPos;
+					
+					
 					pewpew.GetComponent<Projectile>().Source = TargetPlayer.transform.position;
 					pewpew.GetComponent<Projectile>().GivenPower = SpellHoldTime;
 				}
@@ -208,8 +221,19 @@ public class PlayerContoller : MonoBehaviour {
 				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
 				if (HeldSpellEffect == null)
 					HeldSpellEffect = (GameObject.Instantiate(FireBallAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
-					
-				HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
+				
+				
+				if ( Vector3.Distance(TargetPlayer.transform.position, HitPos) > FireBallMaxDistance)
+				{
+					Vector3 EffectPos = TargetPlayer.transform.position + 
+									 (HitPos - TargetPlayer.transform.position).normalized * (float)FireBallMaxDistance; 
+									 
+					HeldSpellEffect.gameObject.transform.position = EffectPos + new Vector3(0, SpellProjectorHeight, 0);
+				}
+				else		
+					HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
+				
+				
 				
 				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
 				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
