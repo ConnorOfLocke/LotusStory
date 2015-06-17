@@ -9,7 +9,7 @@ public class Projectile_Straight : Projectile
 	private Vector3 Direction;
 	private float curTimerSinceStart = 0;
 	
-	void Start ()
+	override public void Start ()
 	{
 		base.Start();
 		Direction = (Destination - Source).normalized;

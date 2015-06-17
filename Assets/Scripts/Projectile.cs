@@ -24,7 +24,7 @@ public abstract class Projectile : MonoBehaviour
 
 	public Vector3 OriginalScale;
 
-	protected void Start ()
+	virtual public void Start ()
 	{
 		OriginalScale = transform.localScale;
 	}

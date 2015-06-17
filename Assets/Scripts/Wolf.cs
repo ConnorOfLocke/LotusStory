@@ -3,85 +3,38 @@ using System.Collections;
 
 public class Wolf : MonoBehaviour
 {
-	public float DistanceToStartFollowing = 10.0f;
-	public GameObject PlayerInScene = null;
-	public float PathfindCheckTime = 2.0f;
-	private float CurrentPathfindCheck = 0.0f;
-
-	public float Speed = 5.0f;
-	public float StopDistance = 1.0f;
-	public float EaseOffDistance = 5.0f;
+	public GameObject WolfCave;
+	public float AddedAnger = 0.05f;
+	public AI_Component Idle_AI;
+	public AI_Component Attack_AI;
 	
-	public float RotatationDelta = 0.3f;
+	private AI_Component Current_AI = null;
 	
-	public float LeanDegree = 20.0f;
+	public float AttackThreshold = 0.7f;
 	
-	private Vector3 PositionToBe;
-	private Quaternion RotationToBe;
-	private Vector3 Velocity;
-	
-	private CharacterController AttachedContoller;
-
-	private float y_pos;
-
-	// Use this for initialization
-	void Start ()
+	private Pissed_O_Meter MeterInScene;
+						
+	public void Start()
 	{
-		AttachedContoller = GetComponent<CharacterController>();
-		RotationToBe = transform.rotation;
-		PositionToBe = transform.position;
-		CurrentPathfindCheck = PathfindCheckTime;
-		y_pos = transform.position.y;
+		MeterInScene = FindObjectOfType<Pissed_O_Meter>();
+		Current_AI = Idle_AI;
 	}
-
-	public void SetTargetPosition(Vector3 Position)
-	{
-		PositionToBe = new Vector3(Position.x, PositionToBe.y, Position.z);
-		RotationToBe = Quaternion.LookRotation( PositionToBe - transform.position);
-	}
-
-	// Update is called once per frame
-	void Update ()
-	{
-		//goes towards player if close enough
-		float Distance = Vector3.Distance(transform.position, PositionToBe);
 	
-		if (CurrentPathfindCheck >= PathfindCheckTime )
-		{		
-			SetTargetPosition(PlayerInScene.transform.position);
-			CurrentPathfindCheck = 0;
-		}
-		else if (CurrentPathfindCheck < PathfindCheckTime)
-			CurrentPathfindCheck += Time.deltaTime;
-			
-		//Rotate the things
-		transform.rotation = Quaternion.Slerp(transform.rotation, RotationToBe, RotatationDelta);
-
-		//lean the thing
-		transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3( AttachedContoller.velocity.magnitude / Speed * LeanDegree, 0, 0));
+	public void Update()
+	{
+		Current_AI.AI_Update();
 		
-		
-		if (Distance > StopDistance)
-		{
-			//Vector3 Direction = (PositionToBe - transform.position).normalized;
-			Vector3 Direction = (transform.rotation * new Vector3(0, 0, 1));
-			Vector3 Movement = Direction.normalized * Speed * Time.deltaTime;
-			Movement.y = 0;
-			
-			//slows down near destination
-			if (Distance < EaseOffDistance)
-			{
-				Movement = Movement * Distance / EaseOffDistance;
-			}
-			
-			AttachedContoller.Move(Movement);
-		}
+		if (MeterInScene.CurrentAnger > AttackThreshold)
+			Current_AI = Attack_AI;
 		else
-		{
-			//PlayerInScene
-			PlayerInScene.GetComponent<Player>().AntiAbsorb();
-			AttachedContoller.Move( Vector3.zero);
-		}
+			Current_AI = Idle_AI;
 	}
+		
+	void OnDestroy()
+	{
+		if (MeterInScene != null)
+			MeterInScene.AddAngerModifier(AddedAnger);
+	}
+	
 }
 

@@ -23,8 +23,11 @@ public class CreatureSpawner : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		//for collision weirdness
+		transform.position += Vector3.zero;
+		
 		if (AttachedHexChunk.HexMana > 0.75f)
 		{
 			Timer += Time.deltaTime;
@@ -35,7 +38,8 @@ public class CreatureSpawner : MonoBehaviour {
 					GameObject NewCreature = GameObject.Instantiate( SpawnedCreature, transform.position, Quaternion.identity ) as GameObject;
 					if (NewCreature.GetComponent<Wolf>() != null)
 					{
-						NewCreature.GetComponent<Wolf>().PlayerInScene = PlayerInScene;
+						NewCreature.GetComponent<AI_AttackPlayer>().PlayerInScene = PlayerInScene;
+						NewCreature.GetComponent<Wolf>().WolfCave = this.gameObject;
 					}	
 					
 					SpawnedCreatures.Add(NewCreature);

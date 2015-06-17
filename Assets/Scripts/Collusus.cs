@@ -16,7 +16,7 @@ public class Collusus : MonoBehaviour {
 	
 	public float Health = 500.0f;
 	public float MaxHealth = 1000.0f;
-	public HealthBar_Vertical HealthBar; 
+	//public HealthBar_Vertical HealthBar; 
 	
 	private Vector3 PositionToBe;
 	private Quaternion RotationToBe;
@@ -114,8 +114,6 @@ public class Collusus : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-		HealthBar.CurrentHealthScale = Health / MaxHealth;
 	
 		Debug.DrawLine(StartPos + new Vector3(0, 10, 0), EndPos + new Vector3(0, 10, 0), Color.magenta);
 		Debug.DrawLine(transform.position + new Vector3(0, 10, 0), transform.position + (EndPos - transform.position).normalized * 10 + new Vector3(0, 10, 0), Color.green); 

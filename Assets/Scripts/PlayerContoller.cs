@@ -138,7 +138,7 @@ public class PlayerContoller : MonoBehaviour {
 				
 				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
 				if (cam != null)
-					cam.AddShake(Time.deltaTime);
+					cam.AddShake(Time.deltaTime * 4.0f);
 				
 				CurrentEffect.transform.position = TargetPlayer.transform.position;
 				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);

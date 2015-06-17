@@ -10,7 +10,7 @@ public class Projectile_Arc : Projectile
 	private float TimeSoFar = 0;
 	
 			// Use this for initialization
-		void Start ()
+		override public void Start ()
 		{
 			base.Start();
 			float ThrowHeight = Mathf.Clamp( MaxHeight - Vector3.Distance(Source, Destination), 1, MaxHeight);

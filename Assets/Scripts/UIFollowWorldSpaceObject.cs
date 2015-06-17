@@ -35,7 +35,6 @@ public class UIFollowWorldSpaceObject : MonoBehaviour {
 			else
 			{
 				Vector3 ObjectCoords = CameraInScene.WorldToScreenPoint(FollowObject.transform.position);
-				Rect llama = attachedTransform.rect;
 				
 				if (ObjectCoords.x > Screen.width - attachedTransform.rect.width)
 					ObjectCoords.x = Screen.width - attachedTransform.rect.width;

@@ -11,6 +11,10 @@ public class TownBuilding : MonoBehaviour
 	public bool BuildingActive;
 	public GameObject RootHub = null;
 
+	public float AddedAnger = 0.003f;
+
+	private Pissed_O_Meter MeterInScene;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -20,6 +24,8 @@ public class TownBuilding : MonoBehaviour
 		ActivePosition = transform.position;
 		transform.position += new Vector3(0,-100, 0);
 		InactivePosition = transform.position;
+		
+		MeterInScene = FindObjectOfType<Pissed_O_Meter>();
 
 	}
 
@@ -50,6 +56,9 @@ public class TownBuilding : MonoBehaviour
 		if (cam != null)
 			cam.AddShake(0.3f);
 
+		if (MeterInScene != null)
+			MeterInScene.AddAngerModifier(AddedAnger);
+		
 		//AttachedMeshRenderer.enabled = false;
 		//foreach (Collider c in AttachedColliders)
 		//	c.enabled = false;

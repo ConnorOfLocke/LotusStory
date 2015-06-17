@@ -23,7 +23,7 @@ public class HexGridGenerator : MonoBehaviour {
 	public GameObject HexWall = null;
 	public UIInitialiser UIInit;
 	public Collusus CollususInScene;
-	public TownHealthBarController TownHealthBar;
+	public Pissed_O_Meter PissedMeter;
 	
 	// Use this for initialization
 	void Awake () 
@@ -112,6 +112,7 @@ public class HexGridGenerator : MonoBehaviour {
 							if (newSpecial.GetComponent<TownHub>() != null)
 							{
 								newSpecial.GetComponent<TownHub>().AttachedChunk = generated_hex_chunks[randHexIndex].GetComponent<HexChunk>();
+								newSpecial.GetComponent<TownHub>().PlayerInScene = PlayerInScene;
 								town_hubs.Add(newSpecial);
 							}
 							
@@ -171,6 +172,7 @@ public class HexGridGenerator : MonoBehaviour {
 						if (newSpecial.GetComponent<TownHub>() != null)
 						{
 							newSpecial.GetComponent<TownHub>().AttachedChunk = generated_hex_chunks[i].GetComponent<HexChunk>();
+							newSpecial.GetComponent<TownHub>().PlayerInScene = PlayerInScene;
 							town_hubs.Add(newSpecial);
 						}
 						
@@ -203,8 +205,8 @@ public class HexGridGenerator : MonoBehaviour {
 			if (UIInit != null)
 				UIInit.InitialiseIcons(town_hubs, creature_spawners);
 			
-			if (TownHealthBar != null)
-				TownHealthBar.Initialise(town_hubs);
+			if (PissedMeter != null)
+				PissedMeter.Initialise(town_hubs);
 		
 		}
 		else

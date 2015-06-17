@@ -13,6 +13,7 @@ public class TownHub : MonoBehaviour
 	private int LastSpawnedSet = -1;
 
 	public HexChunk AttachedChunk;
+	public GameObject PlayerInScene;
 
 	public GameObject[] SpawnedVillagers;
 	public float VillagerSpawnDelay = 20.0f;
@@ -25,10 +26,15 @@ public class TownHub : MonoBehaviour
 	void Start ()
 	{
 		CurrentBuildingSets = new List<GameObject> ();
+		CurVillagerSpawnTimer = VillagerSpawnDelay + Random.value * VillagerSpawnJitter;
 	}
 	
 	void Update ()
-	{
+	{ 
+		//for collision weirdness
+		transform.position += Vector3.zero;
+		
+		
 		if (CurrentTimeToSpawn > TimeToSpawn)
 		{
 			SpawnTier();
@@ -59,6 +65,7 @@ public class TownHub : MonoBehaviour
 		newVillager.transform.rotation = Quaternion.LookRotation ( new Vector3(RandDir.x, 0, RandDir.y));
 
 		newVillager.GetComponent<Villager> ().TownHub = this.gameObject;
+		newVillager.GetComponent<AI_AttackPlayer>().PlayerInScene = PlayerInScene;
 	
 		CurVillagerSpawnTimer = VillagerSpawnDelay + Random.value * VillagerSpawnJitter;
 		CurrentNumVillagers ++;
