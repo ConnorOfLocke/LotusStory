@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Pissed_O_Meter : MonoBehaviour
 {
 	public Collusus AttachedCollusus;
-	private List<GameObject> TownList;
+	public List<GameObject> TownList;
 	public float CurrentAnger;
 	
 	private float CollususStartHealth;

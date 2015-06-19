@@ -18,6 +18,7 @@ public class PlayerContoller : MonoBehaviour {
 	public float MaxDistanceToSelectObject = 20.0f;
 	public AudioSource ChargeSoundSource;
 	public AudioSource SpellCastSource;
+	public AudioSource SpellFailSource;
 	
 	public float SpellProjectorHeight = 20.0f;
 	public GameObject FireBallAimEffect = null;
@@ -205,114 +206,96 @@ public class PlayerContoller : MonoBehaviour {
 			
 			//////////////////////////////////////////////////////////////
 			//FIRE BALL SPELL
-			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.Q))
+			if (CurrMinManaPower > 0)
 			{
-				if (!ChargeSoundSource.isPlaying)
-					ChargeSoundSource.Play();
-				
-				ChargeSoundSource.volume += Time.deltaTime * 10;
-				if (ChargeSoundSource.volume > 0.7f)
-					ChargeSoundSource.volume = 0.7f;
-			
-				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
-				if (cam != null)
-					cam.AddShake(Time.deltaTime * 10.0f);
-				
-				HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
-				if (HeldSpellEffect == null)
-					HeldSpellEffect = (GameObject.Instantiate(FireBallAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
-				
-				
-				if ( Vector3.Distance(TargetPlayer.transform.position, HitPos) > FireBallMaxDistance)
+				if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.Q))
 				{
-					Vector3 EffectPos = TargetPlayer.transform.position + 
-									 (HitPos - TargetPlayer.transform.position).normalized * (float)FireBallMaxDistance; 
-									 
-					HeldSpellEffect.gameObject.transform.position = EffectPos + new Vector3(0, SpellProjectorHeight, 0);
+					if (!ChargeSoundSource.isPlaying)
+						ChargeSoundSource.Play();
+					
+					ChargeSoundSource.volume += Time.deltaTime * 10;
+					if (ChargeSoundSource.volume > 0.7f)
+						ChargeSoundSource.volume = 0.7f;
+				
+					FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+					if (cam != null)
+						cam.AddShake(Time.deltaTime * 10.0f);
+					
+					HeldSpell = PLAYER_SPELL.SPELL_FIREBALL;
+					if (HeldSpellEffect == null)
+						HeldSpellEffect = (GameObject.Instantiate(FireBallAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
+					
+					
+					if ( Vector3.Distance(TargetPlayer.transform.position, HitPos) > FireBallMaxDistance)
+					{
+						Vector3 EffectPos = TargetPlayer.transform.position + 
+										 (HitPos - TargetPlayer.transform.position).normalized * (float)FireBallMaxDistance; 
+										 
+						HeldSpellEffect.gameObject.transform.position = EffectPos + new Vector3(0, SpellProjectorHeight, 0);
+					}
+					else		
+						HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
+					
+					
+					
+					TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
+					TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
+					
+					if (SpellHoldTime < CurrMinManaPower)
+						SpellHoldTime = CurrMinManaPower;				
+					else if (SpellHoldTime < CurrMaxManaPower)
+						SpellHoldTime += Time.deltaTime;
 				}
-				else		
+				//ICICLE 
+				else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.W))
+				{
+					if (!ChargeSoundSource.isPlaying)
+						ChargeSoundSource.Play();
+					
+					ChargeSoundSource.volume += Time.deltaTime * 10;
+					if (ChargeSoundSource.volume > 0.7f)
+						ChargeSoundSource.volume = 0.7f;
+					
+					FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+					if (cam != null)
+						cam.AddShake(Time.deltaTime * 6.0f);
+					
+					HeldSpell = PLAYER_SPELL.SPELL_ICICLE;
+					if (HeldSpellEffect == null)
+						HeldSpellEffect = (GameObject.Instantiate(IcicleAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
+					
 					HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
-				
-				
-				
-				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
-				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
-				
-				if (SpellHoldTime < CurrMinManaPower)
-					SpellHoldTime = CurrMinManaPower;				
-				else if (SpellHoldTime < CurrMaxManaPower)
-					SpellHoldTime += Time.deltaTime;
-			}
-			//ICICLE 
-			else if (Input.GetMouseButton(1) && Input.GetKey(KeyCode.W))
-			{
-				if (!ChargeSoundSource.isPlaying)
-					ChargeSoundSource.Play();
-				
-				ChargeSoundSource.volume += Time.deltaTime * 10;
-				if (ChargeSoundSource.volume > 0.7f)
-					ChargeSoundSource.volume = 0.7f;
-				
-				FollowMeCam cam = FindObjectOfType<FollowMeCam>();
-				if (cam != null)
-					cam.AddShake(Time.deltaTime * 6.0f);
-				
-				HeldSpell = PLAYER_SPELL.SPELL_ICICLE;
-				if (HeldSpellEffect == null)
-					HeldSpellEffect = (GameObject.Instantiate(IcicleAimEffect) as GameObject).GetComponent<ProjectorLightFadeInAndExpand>();
-				
-				HeldSpellEffect.gameObject.transform.position = HitPos + new Vector3(0, SpellProjectorHeight, 0);
-				
-				TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
-				TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
-				
-				if (SpellHoldTime < CurrMinManaPower)
-					SpellHoldTime = CurrMinManaPower;				
-				else if (SpellHoldTime < CurrMaxManaPower)
-					SpellHoldTime += Time.deltaTime;
-				
-			}
-			//spell 3
-			else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.E))
-			{
-				
-				
-			}
-		
-			
-			//////////////////////////////////////////////////////////////
-			//Interactables
-			else if (Input.GetMouseButtonDown(1) && !RightMouseDown)
-			{
-				RaycastHit Hit;
-				Physics.Raycast(mouseRay, out Hit);
-				if (Hit.transform.gameObject.tag == "Interactable")
+					
+					TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
+					TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
+					
+					if (SpellHoldTime < CurrMinManaPower)
+						SpellHoldTime = CurrMinManaPower;				
+					else if (SpellHoldTime < CurrMaxManaPower)
+						SpellHoldTime += Time.deltaTime;
+					
+				}
+				//spell 3
+				else if (Input.GetMouseButton(1) && Input.GetKeyDown(KeyCode.E))
 				{
 				
-					//do effect
-					GameObject.Instantiate(MouseRightClickEffect, Hit.point, Quaternion.identity);
 					
-					if (Direction.magnitude < MaxDistanceToSelectObject)
-					{
-						RightMouseDown = true;
-						TargetPlayer.SetTargetPosition(TargetPlayer.transform.position);
-						TargetPlayer.SetTargetRotation(Quaternion.LookRotation(Direction));
-					
-						//select object
-						Hit.transform.gameObject.GetComponent<InteractableObject>().OnClickOnEvent();
-						if (SelectedObject != null && SelectedObject != Hit.transform.gameObject)
-							SelectedObject.GetComponent<InteractableObject>().OnClickOffEvent();
-						SelectedObject = Hit.transform.gameObject;
-					}
-					else if (SelectedObject != null)
-					{
-						SelectedObject.GetComponent<InteractableObject>().OnClickOffEvent();
-						SelectedObject = null;
-					}
 				}
 			}
-			else if (Input.GetMouseButtonUp(1) && RightMouseDown)
+			else if (Input.GetMouseButton(1))
+			{
+				//fizzle out
+				if (SpellFailSource != null)
+					if ((SpellFailSource.time > 0.2f) || !SpellFailSource.isPlaying)
+					{
+						SpellFailSource.pitch = 1 + Random.value * 0.1f;
+						SpellFailSource.Play();	
+					}
+			}
+			//////////////////////////////////////////////////////////////
+			if (Input.GetMouseButtonUp(1) && RightMouseDown)
 				RightMouseDown = false;
+				
 				
 		}
 	

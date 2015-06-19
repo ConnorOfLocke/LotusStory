@@ -46,16 +46,18 @@ public class Player : MonoBehaviour {
 		{
 			PlayerControllerInScene.CurrMaxManaPower -= Time.deltaTime;
 			PlayerControllerInScene.CurrMinManaPower -= Time.deltaTime;
-			//spawns an effect every 0.05 seconds
-			if ((int)(Time.realtimeSinceStartup * 100) % 5 < 1)
-				GameObject.Instantiate(DamageEffect, transform.position, Quaternion.identity);
-				
-			FollowMeCam cam = FindObjectOfType<FollowMeCam>();
-			if (cam != null)
-				cam.AddShake(Time.deltaTime * 10.0f);
-				
-			
 		}
+		else
+		{
+			PlayerControllerInScene.CurrMaxManaPower -= Time.deltaTime * 0.5f;
+		}
+		
+		if ((int)(Time.realtimeSinceStartup * 100) % 5 < 1)
+			GameObject.Instantiate(DamageEffect, transform.position, Quaternion.identity);
+		
+		FollowMeCam cam = FindObjectOfType<FollowMeCam>();
+		if (cam != null)
+			cam.AddShake(Time.deltaTime * 10.0f);
 	}
 	
 	public void SetTargetRotation(Quaternion newRotation)
