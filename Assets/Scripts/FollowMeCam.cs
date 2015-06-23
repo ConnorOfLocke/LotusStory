@@ -20,6 +20,7 @@ public class FollowMeCam : MonoBehaviour {
 	{
 		get {return (ZoomDistance == StartDistance.magnitude);}
 	}
+	
 	private float ZoomDistance;
 	private float ZoomDistanceToBe;
 
@@ -66,14 +67,6 @@ public class FollowMeCam : MonoBehaviour {
 		Vector3 FinalZoomDistance = StartDistance.normalized * ZoomDistance;
 	
 		Vector3 PlaceToBe = ObjectToFollow.transform.position + FinalZoomDistance;
-		if (AttachedController != null)
-		{
-			if (AttachedController.SelectedObject != null)
-			{
-				Vector3 AveragePosition = (ObjectToFollow.transform.position + AttachedController.SelectedObject.transform.position) * 0.5f;
-				PlaceToBe = AveragePosition + StartDistance;
-			}
-		}
 		
 		//Mouse Spring effect
 		Vector2 MouseInput = (  new Vector2(Input.mousePosition.x, Input.mousePosition.y));

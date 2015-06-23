@@ -12,14 +12,20 @@ public class CreatureSpawner : MonoBehaviour {
 	public float SpawnDelay = 30.0f;
 	public float SpawnJitter = 10.0f;
 
+	public float AddedAnger = 0.2f;
+
 	private float Timer = 0;
 	private float TimeToNextSpawn;
 	private List<GameObject> SpawnedCreatures;
 
+	private Pissed_O_Meter MeterInScene;
 	// Use this for initialization
 	void Start () {
 		TimeToNextSpawn = SpawnDelay + Random.value * SpawnJitter;
 		SpawnedCreatures = new List<GameObject>();
+		MeterInScene = FindObjectOfType<Pissed_O_Meter>();
+		
+		
 	}
 	
 	// Update is called once per frame
@@ -60,5 +66,11 @@ public class CreatureSpawner : MonoBehaviour {
 			
 			}
 		}
+	}
+	
+	void OnDestroy()
+	{
+		if (MeterInScene != null)
+			MeterInScene.AddAngerModifier(AddedAnger, "A wolf cave has been culled");
 	}
 }

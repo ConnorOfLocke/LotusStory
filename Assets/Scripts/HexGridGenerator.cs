@@ -185,6 +185,8 @@ public class HexGridGenerator : MonoBehaviour {
 						}
 					}
 					
+					//
+					
 					generated_hex_chunks[i].GetComponent<HexChunk>().ClearUnspawned();
 					
 					if (i % grid_width == 0 )

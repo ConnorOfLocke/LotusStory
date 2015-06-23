@@ -25,6 +25,10 @@ public class Destructo_Trigger : MonoBehaviour {
 				if (cam != null)
 					cam.AddShake(1.0f);
 			}
+			else if(other.tag == "Denizen")
+			{
+				Destroy(other.gameObject);
+			}
 
 		}
 	}

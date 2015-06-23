@@ -28,7 +28,7 @@ public class Villager : MonoBehaviour
 	{
 		Current_AI.AI_Update();
 		
-		if (MeterInScene.CurrentAnger < AttackThreshold)
+		if (MeterInScene.CurrentAnger < AttackThreshold || TownHub == null)
 			Current_AI = Attack_AI;
 		else
 			Current_AI = Idle_AI;
@@ -38,6 +38,6 @@ public class Villager : MonoBehaviour
 	void OnDestroy()
 	{
 		if (MeterInScene != null)
-			MeterInScene.AddAngerModifier(AddedAnger);
+			MeterInScene.AddAngerModifier(AddedAnger, "A villagers life has ended");
 	}
 }

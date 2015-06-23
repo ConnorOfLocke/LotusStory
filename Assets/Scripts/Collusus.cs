@@ -35,6 +35,7 @@ public class Collusus : MonoBehaviour {
 	
 	private bool isTravelLeftToRight = true;
 
+	public bool StopDoingStuff = false;
 	
 	// Use this for initialization
 	void Start () {		
@@ -43,6 +44,13 @@ public class Collusus : MonoBehaviour {
 		if (DetourPositions == null)
 			DetourPositions = new List<Vector3>();
 	}
+	
+	//stops the collusus where it is
+	public void Stop()
+	{
+		StopDoingStuff = true;
+		SetTargetPosition(transform.position);
+	}	
 	
 	public void RecalculatePath()
 	{
@@ -78,6 +86,7 @@ public class Collusus : MonoBehaviour {
 			TownPos.y = y_pos;
 			SetDetour(TownPos);
 		}
+	
 	}
 	
 	public void Initialise(List<GameObject> a_LeftEdgeHexs, List<GameObject> a_RightEdgeHexs, List<GameObject> a_TownList)
@@ -115,41 +124,43 @@ public class Collusus : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-		Debug.DrawLine(StartPos + new Vector3(0, 10, 0), EndPos + new Vector3(0, 10, 0), Color.magenta);
-		Debug.DrawLine(transform.position + new Vector3(0, 10, 0), transform.position + (EndPos - transform.position).normalized * 10 + new Vector3(0, 10, 0), Color.green); 
-		
-		//Rotate the things
-		Quaternion LookDirection = Quaternion.LookRotation( PositionToBe - transform.position);
-		transform.rotation = Quaternion.Slerp(transform.rotation, LookDirection * Quaternion.Euler(0, 90, 0), RotatationDelta);
+		if (!StopDoingStuff)
+		{
+			Debug.DrawLine(StartPos + new Vector3(0, 10, 0), EndPos + new Vector3(0, 10, 0), Color.magenta);
+			Debug.DrawLine(transform.position + new Vector3(0, 10, 0), transform.position + (EndPos - transform.position).normalized * 10 + new Vector3(0, 10, 0), Color.green); 
 			
-		float Distance = Vector3.Distance(transform.position, PositionToBe);
-	
-		//Move Towards the thing
-		if (Distance > StopDistance)
-		{
-			//Vector3 Direction = (PositionToBe - transform.position).normalized;
-			Vector3 Direction = (LookDirection * new Vector3(0, 0, 1));
-			Vector3 Movement = Direction.normalized * Speed * Time.deltaTime;
-			Movement.y = 0;
-
-			AttachedController.Move(Movement);
-		}
-		else
-		{
-			if (DetourPositions.Count > 0)
+			//Rotate the things
+			Quaternion LookDirection = Quaternion.LookRotation( PositionToBe - transform.position);
+			transform.rotation = Quaternion.Slerp(transform.rotation, LookDirection * Quaternion.Euler(0, 90, 0), RotatationDelta);
+				
+			float Distance = Vector3.Distance(transform.position, PositionToBe);
+		
+			//Move Towards the thing
+			if (Distance > StopDistance)
 			{
-				SetTargetPosition(DetourPositions[DetourPositions.Count - 1]);
-				DetourPositions.RemoveAt(DetourPositions.Count - 1);
+				//Vector3 Direction = (PositionToBe - transform.position).normalized;
+				Vector3 Direction = (LookDirection * new Vector3(0, 0, 1));
+				Vector3 Movement = Direction.normalized * Speed * Time.deltaTime;
+				Movement.y = 0;
+	
+				AttachedController.Move(Movement);
 			}
 			else
 			{
-				SetTargetPosition(EndPos);
+				if (DetourPositions.Count > 0)
+				{
+					SetTargetPosition(DetourPositions[DetourPositions.Count - 1]);
+					DetourPositions.RemoveAt(DetourPositions.Count - 1);
+				}
+				else
+				{
+					SetTargetPosition(EndPos);
+				}
 			}
+			
+			if ( (DetourPositions.Count == 0) && Distance < StopDistance)
+				RecalculatePath();
 		}
-		
-		if ( (DetourPositions.Count == 0) && Distance < StopDistance)
-			RecalculatePath();
-		
 		//for not breaking purposes
 		//transform.position = new Vector3(transform.position.x, y_pos, transform.position.z);
 	}
@@ -159,6 +170,10 @@ public class Collusus : MonoBehaviour {
 		if (collision.collider.gameObject.tag == "Wall")
 		{
 			RecalculatePath();
+		}
+		else if (collision.collider.gameObject.tag == "Denizen")
+		{
+			Destroy(collision.collider.gameObject);
 		}
 	
 	}

@@ -57,7 +57,7 @@ public class TownBuilding : MonoBehaviour
 			cam.AddShake(0.3f);
 
 		if (MeterInScene != null)
-			MeterInScene.AddAngerModifier(AddedAnger);
+			MeterInScene.AddAngerModifier(AddedAnger, "A building has been destroyed");
 		
 		//AttachedMeshRenderer.enabled = false;
 		//foreach (Collider c in AttachedColliders)

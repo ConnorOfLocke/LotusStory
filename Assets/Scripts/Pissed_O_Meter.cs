@@ -9,6 +9,8 @@ public class Pissed_O_Meter : MonoBehaviour
 	public List<GameObject> TownList;
 	public float CurrentAnger;
 	
+	public Text MessageText;
+	
 	private float CollususStartHealth;
 	private float OriginalTownNumber;
 	
@@ -24,6 +26,9 @@ public class Pissed_O_Meter : MonoBehaviour
 	private Vector3 CurrentPosition;
 	private float currentTimeActive = 0;
 	
+	private float prevCollususRatio;
+	private float prevTownRatio;
+	
 	public void Initialise( List<GameObject> a_TownList)
 	{
 		TownList = a_TownList;
@@ -32,15 +37,21 @@ public class Pissed_O_Meter : MonoBehaviour
 		
 		CollususStartHealth = AttachedCollusus.MaxHealth;
 		AttachedScrollBar = GetComponent<Scrollbar>();
-		UpdateMeter();
 		
 		GetComponent<RectTransform>().localPosition = InActivePosition;
 		CurrentPosition = InActivePosition;
+		
+		prevCollususRatio =  AttachedCollusus.Health / CollususStartHealth;
+		prevTownRatio =  (float)TownList.Count / OriginalTownNumber;
+		
+		UpdateMeter();
+		
 	}
 	
-	public void AddAngerModifier(float amount)
+	public void AddAngerModifier(float amount, string message)
 	{
 		currentModifier += amount;
+		MessageText.text = message;
 	}
 	
 	void Start ()
@@ -64,6 +75,14 @@ public class Pissed_O_Meter : MonoBehaviour
 		
 			float CollususRatio = AttachedCollusus.Health / CollususStartHealth;
 			float TownRatio = (float)TownList.Count / OriginalTownNumber;
+			
+			if (CollususRatio != prevCollususRatio)
+				MessageText.text = "The force of nature weakens";
+			prevCollususRatio = CollususRatio;
+			
+			if (TownRatio != prevTownRatio)
+				MessageText.text = "A town has been eradicated";
+			prevTownRatio = TownRatio;
 			
 			float FinalValue = ((TownRatio - CollususRatio + currentModifier) + 1) * 0.5f;
 			float tempVelocity = 0.0f;

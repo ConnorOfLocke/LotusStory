@@ -33,7 +33,7 @@ public class Wolf : MonoBehaviour
 	void OnDestroy()
 	{
 		if (MeterInScene != null)
-			MeterInScene.AddAngerModifier(AddedAnger);
+			MeterInScene.AddAngerModifier(AddedAnger, "A wolf's life has ended");
 	}
 	
 }

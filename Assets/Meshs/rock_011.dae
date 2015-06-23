@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<asset>
+<created>2006-21-15T14:30:25</created>
+<modified>2006-21-15T14:30:25</modified>
+<authoring_tool>MEDUSA PRO registered version</authoring_tool>
+<unit name="meter" meter="1"/>
+<up_axis>Z_UP</up_axis>
+</asset>
+<library_images>
+  <image id="Rhyolite_Lava_diffuse_png" name="Rhyolite_Lava_diffuse_png">
+  <init_from>Rhyolite_Lava_diffuse.png</init_from>
+  </image>
+  <image id="Rhyolite_Lava_specular_png" name="Rhyolite_Lava_specular_png">
+  <init_from>Rhyolite_Lava_specular.png</init_from>
+  </image>
+  <image id="Rhyolite_Lava_normal_png" name="Rhyolite_Lava_normal_png">
+  <init_from>Rhyolite_Lava_normal.png</init_from>
+  </image>
+</library_images>
+<library_effects>
+  <effect id="Mat18-effect">
+    <profile_COMMON>
+    <newparam sid="Rhyolite_Lava_diffuse_png-surface">
+      <surface type="2D">
+        <init_from>Rhyolite_Lava_diffuse_png</init_from>
+       </surface>
+    </newparam>
+    <newparam sid="Rhyolite_Lava_diffuse_png-sampler">
+       <sampler2D>
+          <source>Rhyolite_Lava_diffuse_png-surface</source>
+       </sampler2D>
+    </newparam>
+    <newparam sid="Rhyolite_Lava_normal_png-surface">
+      <surface type="2D">
+        <init_from>Rhyolite_Lava_normal_png</init_from>
+       </surface>
+    </newparam>
+    <newparam sid="Rhyolite_Lava_normal_png-sampler">
+       <sampler2D>
+          <source>Rhyolite_Lava_normal_png-surface</source>
+       </sampler2D>
+    </newparam>
+    <newparam sid="Rhyolite_Lava_specular_png-surface">
+      <surface type="2D">
+        <init_from>Rhyolite_Lava_specular_png</init_from>
+       </surface>
+    </newparam>
+    <newparam sid="Rhyolite_Lava_specular_png-sampler">
+       <sampler2D>
+          <source>Rhyolite_Lava_specular_png-surface</source>
+       </sampler2D>
+    </newparam>
+    <technique sid="common">
+      <phong>
+         <emission>
+            <color sid="emission">0 0 0 1</color>
+         </emission>
+         <ambient>
+            <color sid="ambient">0 0 0 1</color>
+         </ambient>
+         <diffuse>
+           <texture texture="Rhyolite_Lava_diffuse_png-sampler" texcoord="UVMap"/>
+         </diffuse>
+         <bump>
+           <texture texture="Rhyolite_Lava_normal_png-sampler" texcoord="UVMap"/>
+         </bump>
+         <specular>
+           <texture texture="Rhyolite_Lava_specular_png-sampler" texcoord="UVMap"/>
+         </specular>
+         <shininess>
+           <float sid="shininess">50</float>
+         </shininess>
+       </phong>
+     </technique>
+    </profile_COMMON>
+  </effect>
+</library_effects>
+<library_materials>
+    <material id="Mat18-material" name="Mat18">
+      <instance_effect url="#Mat18-effect"/>
+    </material>
+</library_materials>
+<library_geometries>
+   <geometry id="rock0-mesh" name="rock0">
+      <mesh>
+          <source id="rock0-Pos">
+             <float_array id="rock0-Pos-array" count="48">
+0.636738 1.102452 -0.833308
+-1.028442 0.332435 -1.228189
+-0.715651 1.073755 -0.799086
+1.052987 -0.145123 -1.286508
+-0.553298 1.283331 0.153200
+-0.487524 -1.276106 -1.031312
+1.202562 -0.392217 -0.369354
+-1.205192 0.203271 0.021652
+-0.935406 -1.042221 -0.132283
+0.912394 0.823794 1.023774
+-0.777928 0.921497 1.064041
+1.058415 -0.135007 1.109847
+0.495570 -1.204610 0.657618
+-0.834942 -0.523023 1.160951
+-0.827631 -1.052590 0.805580
+0.101586 0.052195 -1.265078
+             </float_array>
+             <technique_common>
+                <accessor source="#rock0-Pos-array" count="16" stride="3">
+                   <param name="X" type="float" />
+                   <param name="Y" type="float" />
+                   <param name="Z" type="float" />
+                </accessor>
+             </technique_common>
+          </source>
+          <source id="rock0-Normal">
+             <float_array id="rock0-Normal-array" count="48">
+0.466982 0.830673 -0.303167
+-0.865527 -0.066547 -0.496421
+-0.295827 0.531573 -0.793673
+0.705827 0.107867 -0.700124
+-0.398159 0.901562 0.169280
+0.039459 -0.783867 -0.619674
+0.862599 -0.489374 -0.128207
+-0.980983 0.147603 0.126039
+-0.926773 -0.346680 -0.144586
+0.620218 0.600487 0.504723
+-0.321501 0.499071 0.804714
+0.526817 -0.307345 0.792467
+0.400730 -0.896596 0.188496
+-0.467421 0.035380 0.883327
+-0.373387 -0.772947 0.512966
+-0.216446 0.075183 -0.973395
+             </float_array>
+             <technique_common>
+                <accessor source="#rock0-Normal-array" count="16" stride="3">
+                   <param name="X" type="float" />
+                   <param name="Y" type="float" />
+                   <param name="Z" type="float" />
+                </accessor>
+             </technique_common>
+          </source>
+          <source id="rock0-map-channel0">
+             <float_array id="rock0-map-channel0-array" count="168">
+0.229614 -0.589996
+-0.199791 -0.631465
+0.823324 -0.048328
+0.823324 -0.228550
+-0.199791 -0.370467
+0.343612 0.050159
+0.343612 0.050159
+-0.199791 -0.370467
+0.421056 0.528067
+-0.199791 -0.370467
+-0.214687 0.305196
+0.421056 0.528067
+0.421056 0.528067
+0.823324 -0.228550
+0.343612 0.050159
+-0.640826 0.173115
+0.421056 -0.489993
+-0.214687 -0.663004
+-0.199791 -0.370467
+-0.562232 -0.291800
+-0.214687 0.305196
+0.446292 0.173115
+0.305196 -0.663004
+-0.291800 -0.304769
+0.823324 -0.048328
+0.472281 0.253807
+0.229614 -0.589996
+0.528067 -0.489993
+0.605766 -0.045500
+-0.228550 -0.048328
+0.472281 0.253807
+-0.077480 -0.041668
+0.229614 -0.589996
+-0.199791 -0.631465
+0.229614 -0.589996
+-0.077480 -0.041668
+0.421056 -0.489993
+-0.640826 0.173115
+0.255108 -0.045500
+-0.077480 -0.041668
+-0.562232 -0.304769
+-0.199791 -0.631465
+-0.291800 -0.304769
+-0.399790 0.172893
+0.446292 0.173115
+-0.562232 -0.304769
+-0.077480 -0.041668
+-0.114416 0.630467
+-0.276179 0.484439
+0.255108 -0.045500
+-0.640826 0.173115
+-0.228550 -0.048328
+0.605766 -0.045500
+0.262011 0.613110
+0.204223 0.638588
+-0.077480 -0.041668
+0.472281 0.253807
+0.204223 0.638588
+-0.114416 0.630467
+-0.077480 -0.041668
+-0.228550 -0.048328
+-0.401208 0.638588
+-0.455203 0.253807
+-0.276179 0.484439
+0.296193 0.613110
+0.255108 -0.045500
+-0.114416 0.630467
+-0.675947 0.172893
+-0.562232 -0.304769
+-0.401208 0.638588
+-0.228550 -0.048328
+0.262011 0.613110
+-0.675947 -0.399790
+-0.114416 -0.411147
+-0.640826 0.446292
+-0.276179 0.530661
+-0.640826 0.446292
+-0.114416 -0.411147
+-0.276179 0.530661
+-0.114416 -0.411147
+0.204223 -0.401208
+0.204223 -0.401208
+0.296193 0.262011
+-0.276179 0.530661
+             </float_array>
+             <technique_common>
+                <accessor source="#rock0-map-channel0-array" count="84" stride="2">
+                   <param name="S" type="float" />
+                   <param name="T" type="float" />
+                </accessor>
+             </technique_common>
+          </source>
+          <vertices id="rock0-Vtx">
+             <input semantic="POSITION" source="#rock0-Pos"/>
+          </vertices>
+          <polygons count="28" material="Mat180-polys">
+             <input semantic="VERTEX" source="#rock0-Vtx" offset="0"/>
+             <input semantic="NORMAL" source="#rock0-Normal" offset="1"/>
+             <input semantic="TEXCOORD" source="#rock0-map-channel0" offset="2"/>
+<p>1 1 0 2 2 1 5 5 2</p>
+<p>5 5 3 2 2 4 15 15 5</p>
+<p>15 15 6 2 2 7 3 3 8</p>
+<p>2 2 9 0 0 10 3 3 11</p>
+<p>3 3 12 5 5 13 15 15 14</p>
+<p>9 9 15 3 3 16 0 0 17</p>
+<p>2 2 18 4 4 19 0 0 20</p>
+<p>9 9 21 0 0 22 4 4 23</p>
+<p>5 5 24 8 8 25 1 1 26</p>
+<p>3 3 27 6 6 28 5 5 29</p>
+<p>8 8 30 7 7 31 1 1 32</p>
+<p>2 2 33 1 1 34 7 7 35</p>
+<p>3 3 36 9 9 37 6 6 38</p>
+<p>7 7 39 4 4 40 2 2 41</p>
+<p>4 4 42 10 10 43 9 9 44</p>
+<p>4 4 45 7 7 46 13 13 47</p>
+<p>11 11 48 6 6 49 9 9 50</p>
+<p>5 5 51 6 6 52 12 12 53</p>
+<p>14 14 54 7 7 55 8 8 56</p>
+<p>14 14 57 13 13 58 7 7 59</p>
+<p>5 5 60 14 14 61 8 8 62</p>
+<p>11 11 63 12 12 64 6 6 65</p>
+<p>13 13 66 10 10 67 4 4 68</p>
+<p>14 14 69 5 5 70 12 12 71</p>
+<p>10 10 72 13 13 73 9 9 74</p>
+<p>11 11 75 9 9 76 13 13 77</p>
+<p>11 11 78 13 13 79 14 14 80</p>
+<p>14 14 81 12 12 82 11 11 83</p>
+          </polygons>
+     </mesh>
+   </geometry>
+</library_geometries>
+<library_visual_scenes>
+   <visual_scene id="RootNode" name="RootNode">
+<node id="rock0" type="NODE">
+<translate sid="location">0 0 0</translate>
+<rotate sid="rotationZ">0 0 1 0</rotate>
+<rotate sid="rotationY">0 1 0 0</rotate>
+<rotate sid="rotationX">1 0 0 0</rotate>
+<scale sid="scale">1 1 1</scale>
+<instance_geometry url="#rock0-mesh">
+  <bind_material>
+    <technique_common>
+    <instance_material symbol="Mat180-polys" target="#Mat18-material">
+        <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+    </instance_material>
+    </technique_common>
+  </bind_material>
+</instance_geometry>
+</node>
+   </visual_scene>
+</library_visual_scenes>
+<scene>
+   <instance_visual_scene url="#RootNode"/>
+</scene>
+</COLLADA>
